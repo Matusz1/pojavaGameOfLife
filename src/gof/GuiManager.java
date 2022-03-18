@@ -9,6 +9,7 @@ import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -18,8 +19,10 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class GuiManager {
+public class GuiManager extends JFrame {
 	
+	private static final long serialVersionUID = 1L;
+
 	private GameOfLife game;
 	
 	private JPanel optionsPanel;
@@ -37,28 +40,41 @@ public class GuiManager {
 	private JMenuItem[] fileMenuItems;
 	
 	private JSlider gameSpeedSlider;
+
+	// For choosing structures
+	private JInternalFrame structuresFrame;
 	private JSplitPane splitPane;
 	private JButton selectStructureButton;
 	private JButton cancelStructureSelectionButton;
-	
-	// The Structures menu
-	private JFrame structuresFrame;
 
+	
+	
+	
+	// === Main Constructor === //
+	
 	GuiManager(GameOfLife g) {
+		super("Game of Life");
+		
 		game = g;
 		
+		this.setSize(1200, 800);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		
 		initPanels();
-		initStructuresFrame();
+		initStructures();
 		initButtons();
 		initGameSpeedSlider();
 		initMenuBar();
 		
 	}
 	
-	private void initStructuresFrame() {
-		structuresFrame = new JFrame("Game of Life - Structures");
+	
+	
+	
+	private void initStructures() {
+		structuresFrame = new JInternalFrame("Game of Life - structures");
 		structuresFrame.setSize(400, 200);
-		structuresFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		this.add(structuresFrame);
 		
 		splitPane = new JSplitPane();
 		selectStructureButton = new JButton("Select");
@@ -70,7 +86,6 @@ public class GuiManager {
 		cancelStructureSelectionButton.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				game.getFrameMgr().setEnabled(true);
 				structuresFrame.setVisible(false);
 			}
 		});
@@ -79,6 +94,9 @@ public class GuiManager {
 		structuresFrame.add(bottomStructuresPanel, BorderLayout.SOUTH);
 	}
 
+	
+	
+	
 	private void initMenuBar() {
 		menuBar = new JMenuBar();
 		fileMenu = new JMenu("File");
@@ -94,7 +112,7 @@ public class GuiManager {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fileChooser = new JFileChooser();
-				int returnVal = fileChooser.showDialog(game.getFrameMgr().getContentPane(), "Save");
+				int returnVal = fileChooser.showDialog(GuiManager.this.getContentPane(), "Save");
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
 					game.getGameMgr().saveToFile(file);
@@ -109,7 +127,7 @@ public class GuiManager {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fileChooser = new JFileChooser();
-				int returnVal = fileChooser.showDialog(game.getFrameMgr().getContentPane(), "Open");
+				int returnVal = fileChooser.showDialog(GuiManager.this.getContentPane(), "Open");
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
 					game.getGameMgr().saveToFile(file);
@@ -137,7 +155,7 @@ public class GuiManager {
 		fileMenuItems[4].addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				game.getFrameMgr().dispose();	
+				GuiManager.this.dispose();	
 			}
 		});
 		
@@ -146,8 +164,11 @@ public class GuiManager {
 		}
 		
 		menuBar.add(fileMenu);
-		game.getFrameMgr().setJMenuBar(menuBar);
+		this.setJMenuBar(menuBar);
 	}
+	
+	
+	
 	
 	private void initPanels() {
 		optionsPanel = new JPanel(new BorderLayout());
@@ -156,8 +177,8 @@ public class GuiManager {
 		
 		optionsPanel.add(optionsStartStopPanel, BorderLayout.NORTH);
 		
-		game.getFrameMgr().add(optionsPanel, BorderLayout.EAST);
-		game.getFrameMgr().add(gamePanel);
+		this.add(optionsPanel, BorderLayout.EAST);
+		this.add(gamePanel);
 	}
 	
 	
@@ -193,7 +214,6 @@ public class GuiManager {
 		structuresButton.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				game.getFrameMgr().setEnabled(false);
 				structuresFrame.setVisible(true);
 			}
 		});
