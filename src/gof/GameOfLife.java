@@ -1,5 +1,7 @@
 package gof;
 
+// Testing the github
+
 public class GameOfLife {
 	
 	private GuiManager guiMgr;
