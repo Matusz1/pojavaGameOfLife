@@ -8,6 +8,7 @@ public class GameManager {
 	
 	private boolean running;
 	private int gameSpeed;
+	private boolean colorfulCells;
 	
 	GameManager(GameOfLife g) {
 		game = g;
@@ -17,16 +18,18 @@ public class GameManager {
 	
 	void setRunning(boolean b) {
 		running = b;
-		System.out.println("The game has startet/stopped");
 	}
 	
-	void setGameSpeedOption(int speed) {
+	void setGameSpeed(int speed) {
 		gameSpeed = speed;
-		System.out.println("Setting the game speed to: " + speed);
+	}
+	
+	public void setColorfulCells(boolean b) {
+		colorfulCells = b;
 	}
 
 	public void saveToFile(File file) {
-		System.out.println("Saving to file: file.getName()");
+		System.out.println("Saving to file: " + file.getName());
 	}
 	
 	public void loadFromFile(File file) {
@@ -35,11 +38,13 @@ public class GameManager {
 
 	public void makeQuickBackup() {
 		System.out.println("Making quick backup");
-		
 	}
 
 	public void loadQuickBackup() {
 		System.out.println("Loading quick backup");
 	}
-	
+
+	public void addStructure(String string) {
+		System.out.println("Adding structure: " + string);
+	}
 }

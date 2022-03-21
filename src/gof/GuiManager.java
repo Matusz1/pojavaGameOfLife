@@ -1,6 +1,7 @@
 package gof;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,13 +10,12 @@ import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.JSplitPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -26,7 +26,6 @@ public class GuiManager extends JFrame {
 	private GameOfLife game;
 	
 	private JPanel optionsPanel;
-	private JPanel optionsStartStopPanel;
 	private JPanel gamePanel;
 	
 	private JButton startButton;
@@ -39,16 +38,7 @@ public class GuiManager extends JFrame {
 	private JMenu fileMenu;
 	private JMenuItem[] fileMenuItems;
 	
-	private JSlider gameSpeedSlider;
-
-	// For choosing structures
-	private JInternalFrame structuresFrame;
-	private JSplitPane splitPane;
-	private JButton selectStructureButton;
-	private JButton cancelStructureSelectionButton;
-
-	
-	
+	private JSlider gameSpeedSlider;	
 	
 	// === Main Constructor === //
 	
@@ -60,42 +50,23 @@ public class GuiManager extends JFrame {
 		this.setSize(1200, 800);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
-		initPanels();
-		initStructures();
-		initButtons();
-		initGameSpeedSlider();
+		GridLayout grid = new GridLayout(20, 1);
+		grid.setHgap(5);
+		grid.setVgap(5);
+		optionsPanel = new JPanel(grid);
+		gamePanel = new JPanel();
+		
+		gamePanel.setBackground(Color.white);
+		gamePanel.add(new JLabel("Visualisation"));
+		
+		this.add(optionsPanel, BorderLayout.EAST);
+		this.add(gamePanel);
+		
+		initOptionsPanel();
 		initMenuBar();
 		
 	}
-	
-	
-	
-	
-	private void initStructures() {
-		structuresFrame = new JInternalFrame("Game of Life - structures");
-		structuresFrame.setSize(400, 200);
-		this.add(structuresFrame);
 		
-		splitPane = new JSplitPane();
-		selectStructureButton = new JButton("Select");
-		cancelStructureSelectionButton = new JButton("Cancel");
-		JPanel bottomStructuresPanel = new JPanel();
-		bottomStructuresPanel.add(selectStructureButton);
-		bottomStructuresPanel.add(cancelStructureSelectionButton);
-		
-		cancelStructureSelectionButton.addActionListener(new ActionListener() {	
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				structuresFrame.setVisible(false);
-			}
-		});
-		
-		structuresFrame.add(splitPane, BorderLayout.CENTER);
-		structuresFrame.add(bottomStructuresPanel, BorderLayout.SOUTH);
-	}
-
-	
-	
 	
 	private void initMenuBar() {
 		menuBar = new JMenuBar();
@@ -112,6 +83,7 @@ public class GuiManager extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setCurrentDirectory(new File("./Saves"));
 				int returnVal = fileChooser.showDialog(GuiManager.this.getContentPane(), "Save");
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
@@ -127,10 +99,11 @@ public class GuiManager extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setCurrentDirectory(new File("./Saves"));
 				int returnVal = fileChooser.showDialog(GuiManager.this.getContentPane(), "Open");
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
-					game.getGameMgr().saveToFile(file);
+					game.getGameMgr().loadFromFile(file);
 				}
 				else if (returnVal == JFileChooser.ERROR_OPTION) {
 					System.out.println("Failed opening a file");
@@ -169,33 +142,36 @@ public class GuiManager extends JFrame {
 	
 	
 	
-	
-	private void initPanels() {
-		optionsPanel = new JPanel(new BorderLayout());
-		optionsStartStopPanel = new JPanel(new GridLayout(1, 2));
-		gamePanel = new JPanel();
+	private void initOptionsPanel() {
+		gameSpeedSlider = new JSlider(JSlider.HORIZONTAL, 1, 4, 2);
+		gameSpeedSlider.setMajorTickSpacing(1);
+		gameSpeedSlider.setPaintLabels(true);
+		gameSpeedSlider.setPaintLabels(true);
+		gameSpeedSlider.setPaintTrack(true);
 		
-		optionsPanel.add(optionsStartStopPanel, BorderLayout.NORTH);
+		gameSpeedSlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				game.getGameMgr().setGameSpeed(gameSpeedSlider.getValue());
+			}
+		});
 		
-		this.add(optionsPanel, BorderLayout.EAST);
-		this.add(gamePanel);
-	}
-	
-	
-	
-	private void initButtons() {
+		
 		startButton = new JButton("Start");
 		stopButton = new JButton("Stop");
 		blackCellsButton = new JButton("Black");
 		colorCellsButton = new JButton("Color");
 		structuresButton = new JButton("Structures");
 		
+		stopButton.setEnabled(false);
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				structuresButton.setEnabled(false);
 				gameSpeedSlider.setEnabled(false);
 				fileMenu.setEnabled(false);
+				stopButton.setEnabled(true);
+				startButton.setEnabled(false);
 				game.getGameMgr().setRunning(true);
 			}
 		});
@@ -207,6 +183,8 @@ public class GuiManager extends JFrame {
 				gameSpeedSlider.setEnabled(true);
 				structuresButton.setEnabled(true);
 				fileMenu.setEnabled(true);
+				startButton.setEnabled(true);
+				stopButton.setEnabled(false);
 				game.getGameMgr().setRunning(false);
 			}
 		});
@@ -214,32 +192,50 @@ public class GuiManager extends JFrame {
 		structuresButton.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				structuresFrame.setVisible(true);
+				int status = StructuresDialog.showDialog(GuiManager.this);
+				if (status == 0) {
+					System.out.println("No structure selected");
+				}
+				else {
+					game.getGameMgr().addStructure(StructuresDialog.getValue());
+				}
 			}
 		});
 		
-		optionsStartStopPanel.add(startButton);
-		optionsStartStopPanel.add(stopButton);
-		optionsPanel.add(blackCellsButton);
-		optionsPanel.add(colorCellsButton);
-		optionsPanel.add(structuresButton, BorderLayout.SOUTH);
-	}
-	
-	
-	private void initGameSpeedSlider() {
-		gameSpeedSlider = new JSlider(JSlider.HORIZONTAL, 1, 4, 2);
-		gameSpeedSlider.setMajorTickSpacing(1);
-		gameSpeedSlider.setPaintLabels(true);
-		gameSpeedSlider.setPaintLabels(true);
-		gameSpeedSlider.setPaintTrack(true);
-		
-		gameSpeedSlider.addChangeListener(new ChangeListener() {
+		blackCellsButton.addActionListener(new ActionListener() {	
 			@Override
-			public void stateChanged(ChangeEvent e) {
-				game.getGameMgr().setGameSpeedOption(gameSpeedSlider.getValue());
+			public void actionPerformed(ActionEvent e) {
+				game.getGameMgr().setColorfulCells(false);
 			}
 		});
 		
+		colorCellsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				game.getGameMgr().setColorfulCells(true);		
+			}
+		});
+		
+		GridLayout g = new GridLayout(1, 2);
+		g.setHgap(5);
+		g.setVgap(5);
+		
+		JPanel p1 = new JPanel(g);
+		JPanel p2 = new JPanel(g);
+		
+		p1.add(startButton);
+		p1.add(stopButton);
+		p2.add(blackCellsButton);
+		p2.add(colorCellsButton);
+		
+		optionsPanel.add(p1);
+		optionsPanel.add(new JLabel("Set game speed"));
 		optionsPanel.add(gameSpeedSlider);
+		optionsPanel.add(new JLabel("Choose color of cells"));
+		optionsPanel.add(p2);
+		optionsPanel.add(structuresButton);
+		
+		
 	}
+	
 }
