@@ -20,13 +20,13 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class GuiManager extends JFrame {
-	
-	private static final long serialVersionUID = 1L;
+
+	//private static final long serialVersionUID = -1446237294057835141L;
 
 	private GameOfLife game;
 	
 	private JPanel optionsPanel;
-	private JPanel gamePanel;
+	private GamePanel gamePanel;
 	
 	private JButton startButton;
 	private JButton stopButton;
@@ -54,13 +54,12 @@ public class GuiManager extends JFrame {
 		grid.setHgap(5);
 		grid.setVgap(5);
 		optionsPanel = new JPanel(grid);
-		gamePanel = new JPanel();
+		gamePanel = new GamePanel();
 		
 		gamePanel.setBackground(Color.white);
-		gamePanel.add(new JLabel("Visualisation"));
 		
 		this.add(optionsPanel, BorderLayout.EAST);
-		this.add(gamePanel);
+		this.add(gamePanel, BorderLayout.CENTER);
 		
 		initOptionsPanel();
 		initMenuBar();
@@ -235,6 +234,20 @@ public class GuiManager extends JFrame {
 		optionsPanel.add(p2);
 		optionsPanel.add(structuresButton);
 		
+		
+		
+		// TEMPORARY
+		JButton tmpButton = new JButton("tmp button");
+		tmpButton.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				CellsHolder.updateNeigboursCount();
+				CellsHolder.updateAliveStatus();
+				gamePanel.repaint();
+			}
+		});
+		optionsPanel.add(tmpButton);
 		
 	}
 	

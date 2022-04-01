@@ -10,6 +10,7 @@ public class GameOfLife {
 	GameOfLife() {
 		gameMgr = new GameManager(this);
 		guiMgr = new GuiManager(this);
+		CellsHolder.initCells();
 	}
 
 	public static void main(String[] args) {

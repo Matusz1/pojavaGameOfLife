@@ -1,9 +1,11 @@
 package gof;
 
 public class Cell {
+	private static final int XPOS_NEIGHBOURS[] = {1, 1, 1, 0, -1, -1, -1, 0};
+	private static final int YPOS_NEIGHBOURS[] = {1, 0, -1, -1, -1, 0, 1, 1};
+	
 	private int xPos;
 	private int yPos;
-	
 	
 	private boolean alive = false;
 	private int lifetime = 0;
@@ -21,7 +23,7 @@ public class Cell {
 	 * (dx, dy) with respect to this cell
 	 */
 	Cell getNeigbour(int dx, int dy) {
-		
+		return null;
 	}
 	
 	
@@ -30,7 +32,11 @@ public class Cell {
 	 * and increments its neighbour count by 1
 	 */
 	void updateNeigbours() {
-		
+		for (int i = 0; i != 8; ++i) {
+			final int nX = xPos + XPOS_NEIGHBOURS[i];
+			final int nY = yPos + YPOS_NEIGHBOURS[i];
+			CellsHolder.getCell(nX, nY).neigbourCount++;
+		}
 	}
 	
 	
@@ -41,6 +47,17 @@ public class Cell {
 		return alive;
 	}
 	
+	void setAlive(boolean b) {
+		alive = b;
+	}
+
+	public int getNeigbourCount() {
+		return neigbourCount;
+	}
+	
+	public void setNeighbourCount(int n) {
+		neigbourCount = n;
+	}
 	
 	
 }
