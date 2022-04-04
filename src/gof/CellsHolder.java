@@ -17,19 +17,19 @@ public class CellsHolder {
 				cells[i][j] = new Cell(i, j);
 			}
 		}
-		cells[12][11].setAlive(true);
+		cells[11][12].setAlive(true);
 		cells[12][12].setAlive(true);
-		cells[13][12].setAlive(true);
-		cells[11][17].setAlive(true);
-		cells[13][16].setAlive(true);
-		cells[13][17].setAlive(true);
-		cells[13][18].setAlive(true);
+		cells[12][13].setAlive(true);
+		cells[17][11].setAlive(true);
+		cells[16][13].setAlive(true);
+		cells[17][13].setAlive(true);
+		cells[18][13].setAlive(true);
 		
-		cells[21][23].setAlive(true);
-		cells[22][21].setAlive(true);
-		cells[22][23].setAlive(true);
-		cells[23][22].setAlive(true);
-		cells[23][23].setAlive(true);
+		cells[31][13].setAlive(true);
+		cells[32][11].setAlive(true);
+		cells[32][13].setAlive(true);
+		cells[33][12].setAlive(true);
+		cells[33][13].setAlive(true);
 	}
 	
 	/*

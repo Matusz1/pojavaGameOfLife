@@ -12,13 +12,17 @@ public class GamePanel extends JPanel {
 
 	//private static final long serialVersionUID = 4802230154979709652L;
 	
-	private int boxSize = 20;
+	private int boxSize = 16;
 	
 	// Offset for drawing the cells
 	private int majorX = 0;
 	private int majorY = 0;
 	private int minorX = 0;
 	private int minorY = 0;
+	
+	// For moving purpose
+	private int lastMousePosX = 0;
+	private int lastMousePosY = 0;
 	
 	GamePanel() {
 		super();
@@ -33,7 +37,8 @@ public class GamePanel extends JPanel {
 			
 			@Override
 			public void mousePressed(MouseEvent e) {
-				repaint();
+				lastMousePosX = e.getX();
+				lastMousePosY = e.getY();
 			}
 			
 			@Override
@@ -59,30 +64,50 @@ public class GamePanel extends JPanel {
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
+				 minorX += e.getX() - lastMousePosX;
+				 minorY += e.getY() - lastMousePosY;
+				 lastMousePosX = e.getX();
+				 lastMousePosY = e.getY();
+				 repaint();
 			}
 		});
+	}
+	
+	public void drawGrid(Graphics g) {
+		final int width = this.getWidth();
+		final int height = this.getHeight();
+		
+		// Drawing Horizontal lines
+		for (int i = minorY; i < width; i += boxSize) {
+			g.fillRect(0, i-1, width, 2);
+		}
+		
+		// Drawing Vertical lines
+		for (int i = minorX; i < width; i += boxSize) {
+			g.fillRect(i-1, 0, 2, height);
+		}
 	}
 	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		g.setColor(Color.lightGray);
+		drawGrid(g);
+		
 		g.setColor(Color.black);
 		
-		final int width = this.getWidth() / (boxSize+4);
-		final int height = this.getHeight() / (boxSize+4);
+		final int width = this.getWidth() / boxSize + 1;
+		final int height = this.getHeight() / boxSize + 1;
 		
-		for (int i = majorY; i < width; ++i) {
-			for (int j = majorX; j < height; ++j) {
-				if (CellsHolder.getCell(i, j).isAlive()) {
-					g.fillRect((j - majorX)*boxSize, (i - majorY)*boxSize, boxSize, boxSize);			
+		for (int i = majorY; i < height; ++i) {
+			for (int j = majorX; j < width; ++j) {
+				if (CellsHolder.getCell(j, i).isAlive()) {
+					g.fillRect((j - majorX)*boxSize + 2 + minorX, (i - majorY)*boxSize + 2 + minorY, boxSize-4, boxSize-4);			
 				}
 			}
 		}
