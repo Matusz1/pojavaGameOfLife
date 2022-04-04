@@ -237,7 +237,7 @@ public class GuiManager extends JFrame {
 		
 		
 		// TEMPORARY
-		JButton tmpButton = new JButton("tmp button");
+		JButton tmpButton = new JButton("Next step");
 		tmpButton.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
