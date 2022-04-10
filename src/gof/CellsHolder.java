@@ -6,9 +6,10 @@ public class CellsHolder {
 	static final int HEIGHT = 512;
 	
 	private static Cell[][] cells;
+	private static boolean[][] quickBackup;
 	
 	/*
-	 * Initializes all the cells in array
+	 * Initializes all the cells in array and initializes backup information
 	 */
 	static void initCells() {
 		cells = new Cell[HEIGHT][WIDTH];
@@ -30,8 +31,12 @@ public class CellsHolder {
 		cells[32][13].setAlive(true);
 		cells[33][12].setAlive(true);
 		cells[33][13].setAlive(true);
+		
 	}
 	
+	static void initQuickBackup () {
+		quickBackup = new boolean[HEIGHT][WIDTH];
+	}
 	/*
 	 * Returns cell with given coordinates,
 	 * while taking care of periodic boundary conditions
@@ -80,10 +85,22 @@ public class CellsHolder {
 	 * Sets every cell to dead state
 	 */
 	static void clearAll() {
-		
+		for (Cell[] row : cells) {
+			for (Cell cell : row) {
+				cell.setAlive(false);
+			}
+		}
 	}
 	
 	static Cell[][] getCells() {
 		return cells;
+	}
+	
+	static boolean[][] getQuickBackup() {
+		return quickBackup;
+	}
+	
+	static void setQuickBackup (int x, int y, boolean b) {
+		quickBackup[x][y] = b;
 	}
 }

@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GuiManager extends JFrame {
 
@@ -65,7 +66,15 @@ public class GuiManager extends JFrame {
 		initMenuBar();
 		
 	}
-		
+	
+	GamePanel getGamePanel () {
+		return gamePanel;
+	};
+	
+	JMenuItem [] getMenuItem () {
+		return fileMenuItems;
+	}
+	
 	
 	private void initMenuBar() {
 		menuBar = new JMenuBar();
@@ -78,11 +87,15 @@ public class GuiManager extends JFrame {
 		fileMenuItems[3] = new JMenuItem("Load quick backup");
 		fileMenuItems[4] = new JMenuItem("Exit");
 		
+		fileMenuItems[3].setEnabled(false);
+		
 		fileMenuItems[0].addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setCurrentDirectory(new File("./Saves"));
+				fileChooser.setAcceptAllFileFilterUsed(false);
+				fileChooser.addChoosableFileFilter(new FileNameExtensionFilter ("Game of Life Files", "txt"));
 				int returnVal = fileChooser.showDialog(GuiManager.this.getContentPane(), "Save");
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
@@ -99,6 +112,8 @@ public class GuiManager extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setCurrentDirectory(new File("./Saves"));
+				fileChooser.setAcceptAllFileFilterUsed(false);
+				fileChooser.addChoosableFileFilter(new FileNameExtensionFilter ("Game of Life Files", "txt"));
 				int returnVal = fileChooser.showDialog(GuiManager.this.getContentPane(), "Open");
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
