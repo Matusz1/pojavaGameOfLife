@@ -8,7 +8,7 @@ public class Cell {
 	private int yPos;
 	
 	private boolean alive = false;
-	private int lifetime = 0;
+	private int lifetime = 0;        //meaning that it is the n-th turn the cell takes part in
 	private int neigbourCount = 0;
 	
 	
@@ -49,6 +49,10 @@ public class Cell {
 	
 	void setAlive(boolean b) {
 		alive = b;
+		if (b)
+			lifetime++;
+		else
+			setLifetime (0);
 	}
 
 	public int getNeigbourCount() {
@@ -59,5 +63,15 @@ public class Cell {
 		neigbourCount = n;
 	}
 	
+	public void incrementLifetime () {
+		lifetime++;
+	}
 	
+	public int getLifetime () {
+		return lifetime;
+	}
+	
+	public void setLifetime (int lifetime) {
+		this.lifetime = lifetime;
+	}
 }

@@ -55,7 +55,7 @@ public class GuiManager extends JFrame {
 		grid.setHgap(5);
 		grid.setVgap(5);
 		optionsPanel = new JPanel(grid);
-		gamePanel = new GamePanel();
+		gamePanel = new GamePanel(game);
 		
 		gamePanel.setBackground(Color.white);
 		
@@ -177,7 +177,6 @@ public class GuiManager extends JFrame {
 		colorCellsButton = new JButton("Color");
 		structuresButton = new JButton("Structures");
 		
-		stopButton.setEnabled(false);
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -202,6 +201,7 @@ public class GuiManager extends JFrame {
 				game.getGameMgr().setRunning(false);
 			}
 		});
+		stopButton.setEnabled(false);
 		
 		structuresButton.addActionListener(new ActionListener() {	
 			@Override
@@ -220,13 +220,20 @@ public class GuiManager extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				game.getGameMgr().setColorfulCells(false);
+				colorCellsButton.setEnabled(true);
+				blackCellsButton.setEnabled(false);
+				gamePanel.repaint();
 			}
 		});
+		blackCellsButton.setEnabled(false);
 		
 		colorCellsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				game.getGameMgr().setColorfulCells(true);		
+				game.getGameMgr().setColorfulCells(true);
+				colorCellsButton.setEnabled(false);
+				blackCellsButton.setEnabled(true);
+				gamePanel.repaint();
 			}
 		});
 		

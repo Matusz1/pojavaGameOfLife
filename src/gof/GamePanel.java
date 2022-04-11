@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 public class GamePanel extends JPanel {
 
 	//private static final long serialVersionUID = 4802230154979709652L;
+	private GameOfLife game;
 	
 	private int boxSize = 16;
 	
@@ -24,8 +25,9 @@ public class GamePanel extends JPanel {
 	private int lastMousePosX = 0;
 	private int lastMousePosY = 0;
 	
-	GamePanel() {
+	GamePanel(GameOfLife g) {
 		super();
+		game = g;
 		
 		this.addMouseListener(new MouseListener() {
 			
@@ -97,9 +99,7 @@ public class GamePanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.lightGray);
-		drawGrid(g);
-		
-		g.setColor(Color.black);
+		drawGrid(g);	
 		
 		final int width = this.getWidth() / boxSize + 1;
 		final int height = this.getHeight() / boxSize + 1;
@@ -107,7 +107,21 @@ public class GamePanel extends JPanel {
 		for (int i = majorY; i < height; ++i) {
 			for (int j = majorX; j < width; ++j) {
 				if (CellsHolder.getCell(j, i).isAlive()) {
-					g.fillRect((j - majorX)*boxSize + 2 + minorX, (i - majorY)*boxSize + 2 + minorY, boxSize-4, boxSize-4);			
+					
+					//Deciding the fill color		
+					if (game.getGameMgr().getColorfulCells() && CellsHolder.getCell(j, i).getLifetime() == 1)
+						g.setColor(Color.yellow);
+					else if (game.getGameMgr().getColorfulCells() && CellsHolder.getCell(j, i).getLifetime() == 2)
+						g.setColor(Color.orange);
+					else if (game.getGameMgr().getColorfulCells() && CellsHolder.getCell(j, i).getLifetime() == 3)		
+						g.setColor(Color.red);
+					else if (game.getGameMgr().getColorfulCells() && CellsHolder.getCell(j, i).getLifetime() >= 4)
+						g.setColor(Color.green);
+					else if (!game.getGameMgr().getColorfulCells())
+						g.setColor(Color.black);
+					
+					g.fillRect((j - majorX)*boxSize + 2 + minorX, (i - majorY)*boxSize + 2 + minorY, boxSize-4, boxSize-4);	
+					
 				}
 			}
 		}

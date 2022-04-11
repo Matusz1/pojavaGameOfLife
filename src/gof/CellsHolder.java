@@ -6,7 +6,7 @@ public class CellsHolder {
 	static final int HEIGHT = 512;
 	
 	private static Cell[][] cells;
-	private static boolean[][] quickBackup;
+	private static Cell[][] quickBackup;
 	
 	/*
 	 * Initializes all the cells in array and initializes backup information
@@ -35,7 +35,12 @@ public class CellsHolder {
 	}
 	
 	static void initQuickBackup () {
-		quickBackup = new boolean[HEIGHT][WIDTH];
+		quickBackup = new Cell[HEIGHT][WIDTH];
+		for (int i = 0; i != HEIGHT; ++i) {
+			for (int j = 0; j != WIDTH; ++j) {
+				quickBackup[i][j] = new Cell(i, j);
+			}
+		}
 	}
 	/*
 	 * Returns cell with given coordinates,
@@ -72,12 +77,16 @@ public class CellsHolder {
 				final int n = cell.getNeigbourCount();
 				if (cell.isAlive() && (n != 2 && n != 3)) {
 					cell.setAlive(false);
+					cell.setLifetime(0);
 				}
-				else if (n == 3) {
+				else if (cell.isAlive() == false && n == 3) {
 					cell.setAlive(true);
 				}
+				else if (cell.isAlive() && (n == 2 || n == 3)) {
+					cell.incrementLifetime();
+				}
 				cell.setNeighbourCount(0);
-			}
+			}	
 		}
 	}
 	
@@ -96,11 +105,20 @@ public class CellsHolder {
 		return cells;
 	}
 	
-	static boolean[][] getQuickBackup() {
+	static Cell[][] getQuickBackup() {
 		return quickBackup;
 	}
 	
 	static void setQuickBackup (int x, int y, boolean b) {
-		quickBackup[x][y] = b;
+		quickBackup[x][y].setAlive(b); 
+	}
+	
+	//Probably unnecesary, see: Cell.setAlive()
+	static void clearLifetimes () {
+		for (Cell[] row : cells) {
+			for (Cell cell : row) {
+				cell.setLifetime(0);
+			}
+		}
 	}
 }

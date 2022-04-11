@@ -14,7 +14,7 @@ public class GameManager {
 	
 	private boolean running;
 	private int gameSpeed;
-	private boolean colorfulCells;
+	private boolean colorfulCells = false;
 	
 	GameManager(GameOfLife g) {
 		game = g;
@@ -32,6 +32,10 @@ public class GameManager {
 	
 	public void setColorfulCells(boolean b) {
 		colorfulCells = b;
+	}
+	
+	public boolean getColorfulCells () {
+		return colorfulCells;
 	}
 
 	public void saveToFile(File file) {
@@ -101,7 +105,8 @@ public class GameManager {
 		
 		for (int y = 0; y < CellsHolder.HEIGHT; y++)
 	    	for (int x = 0; x < CellsHolder.WIDTH; x++) {
-	    		CellsHolder.getQuickBackup()[x][y] = CellsHolder.getCells()[x][y].isAlive();
+	    		CellsHolder.getQuickBackup()[x][y].setAlive(CellsHolder.getCells()[x][y].isAlive());
+	    		CellsHolder.getQuickBackup()[x][y].setLifetime(CellsHolder.getCells()[x][y].getLifetime());
 	    	}
 	}
 
@@ -109,9 +114,10 @@ public class GameManager {
 		System.out.println("Loading quick backup");
 			CellsHolder.clearAll();
 			for (int y = 0; y < CellsHolder.HEIGHT; y++)
-				for (int x = 0; x < CellsHolder.WIDTH; x++) 
-					CellsHolder.getCells()[x][y].setAlive(CellsHolder.getQuickBackup()[x][y]);
-			
+				for (int x = 0; x < CellsHolder.WIDTH; x++) {
+					CellsHolder.getCells()[x][y].setAlive(CellsHolder.getQuickBackup()[x][y].isAlive());
+					CellsHolder.getCells()[x][y].setLifetime(CellsHolder.getQuickBackup()[x][y].getLifetime());
+				}
 			game.getGuiMgr().getGamePanel().repaint();
 	}
 
