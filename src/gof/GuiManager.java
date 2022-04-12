@@ -113,7 +113,7 @@ public class GuiManager extends JFrame {
 				final JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setCurrentDirectory(new File("./Saves"));
 				fileChooser.setAcceptAllFileFilterUsed(false);
-				fileChooser.addChoosableFileFilter(new FileNameExtensionFilter ("Game of Life Files", "txt"));
+				fileChooser.addChoosableFileFilter(new FileNameExtensionFilter ("Game of Life Files", "txt", "gof"));
 				int returnVal = fileChooser.showDialog(GuiManager.this.getContentPane(), "Open");
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();

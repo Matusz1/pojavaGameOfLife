@@ -45,7 +45,7 @@ public class GameManager {
 		Path myPath = file.toPath();
 		try (BufferedWriter writer = Files.newBufferedWriter(myPath, charset)) {
 		    boolean byteWriteBoolean = false;
-		    int byteWrite = 111;
+		    int byteWrite = 111; 	//meaningless number
 		    for (int y = 0; y < CellsHolder.HEIGHT; y++)
 		    	for (int x = 0; x < CellsHolder.WIDTH; x++) {
 		    		
@@ -58,6 +58,7 @@ public class GameManager {
 		   			}
 		    		
 		    		writer.write(byteWrite);
+		    		writer.write(CellsHolder.getCells()[x][y].getLifetime() + 48);
 		    	}
 		} catch (IOException x) {
 		    System.err.format("IOException: %s%n", x);
@@ -70,7 +71,7 @@ public class GameManager {
 		Charset charset = Charset.forName("US-ASCII");
 		Path myPath = file.toPath();
 		try (BufferedReader reader = Files.newBufferedReader(myPath, charset)) {
-		    int byteRead=144;
+		    int byteRead=111; 	//meaningless number
 		    boolean byteReadBoolean = false;
 		    CellsHolder.clearAll();
 		    
@@ -85,6 +86,7 @@ public class GameManager {
 		    				byteReadBoolean = true;
 		    			}
 		    			CellsHolder.getCells()[x][y].setAlive(byteReadBoolean);
+		    			CellsHolder.getCells()[x][y].setLifetime(reader.read() - 48);
 		    		}
 		    		else
 		    			break;
