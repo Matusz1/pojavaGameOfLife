@@ -75,6 +75,18 @@ public class GuiManager extends JFrame {
 		return fileMenuItems;
 	}
 	
+	JButton getStructuresButton () {
+		return structuresButton;
+	}
+	
+	JButton getStartButton () {
+		return startButton;
+	}
+	
+	JMenuBar getMenubar () {
+		return menuBar;
+	}
+	
 	
 	private void initMenuBar() {
 		menuBar = new JMenuBar();
@@ -95,7 +107,7 @@ public class GuiManager extends JFrame {
 				final JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setCurrentDirectory(new File("./Saves"));
 				fileChooser.setAcceptAllFileFilterUsed(false);
-				fileChooser.addChoosableFileFilter(new FileNameExtensionFilter ("Game of Life Files", "txt"));
+				fileChooser.addChoosableFileFilter(new FileNameExtensionFilter ("Game of Life Files", "txt", "gof"));
 				int returnVal = fileChooser.showDialog(GuiManager.this.getContentPane(), "Save");
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
@@ -206,7 +218,7 @@ public class GuiManager extends JFrame {
 		structuresButton.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int status = StructuresDialog.showDialog(GuiManager.this);
+				int status = StructuresDialog.showDialog(GuiManager.this, game);
 				if (status == 0) {
 					System.out.println("No structure selected");
 				}

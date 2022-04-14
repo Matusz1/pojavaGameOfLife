@@ -25,6 +25,10 @@ public class GamePanel extends JPanel {
 	private int lastMousePosX = 0;
 	private int lastMousePosY = 0;
 	
+	// Current mouse position
+	private int xMousePos = 0;
+	private int yMousePos = 0;
+	
 	GamePanel(GameOfLife g) {
 		super();
 		game = g;
@@ -66,7 +70,11 @@ public class GamePanel extends JPanel {
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {
-				
+				if (StructuresDialog.getStatus() == 1) {
+					xMousePos = e.getX();
+					yMousePos = e.getY();
+					repaint();
+				}
 			}
 			
 			@Override
@@ -75,6 +83,8 @@ public class GamePanel extends JPanel {
 				 minorY += e.getY() - lastMousePosY;
 				 lastMousePosX = e.getX();
 				 lastMousePosY = e.getY();
+					xMousePos = e.getX();
+					yMousePos = e.getY();
 				 repaint();
 			}
 		});
@@ -94,6 +104,11 @@ public class GamePanel extends JPanel {
 			g.fillRect(i-1, 0, 2, height);
 		}
 	}
+	
+	public void HighlightStructure(Structure structure, Graphics g) {
+					for (int i = 0; i < structure.getVY().length; i++)
+							g.fillRect((int)Math.floor((xMousePos - (int)minorX%boxSize - boxSize)/boxSize)*boxSize + (int)minorX%boxSize + structure.getVX()[i]*boxSize + 2, (int)Math.floor((yMousePos - (int)minorY%boxSize - boxSize)/boxSize)*boxSize + (int)minorY%boxSize + structure.getVY()[i]*boxSize + 2, boxSize - 4, boxSize - 4);
+	}	
 	
 	@Override
 	public void paintComponent(Graphics g) {
@@ -125,6 +140,11 @@ public class GamePanel extends JPanel {
 				}
 			}
 		}
+		
+		g.setColor(Color.gray);
+		
+		if (StructuresDialog.getValue() == "Pond")
+			HighlightStructure(Structure.pond, g);
 	}
 
 }

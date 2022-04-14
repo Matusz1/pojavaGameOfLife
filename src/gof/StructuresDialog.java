@@ -19,6 +19,8 @@ public class StructuresDialog extends JDialog {
 	
 	private static final long serialVersionUID = 1L;
 	
+	GameOfLife game;
+	
 	private static StructuresDialog dialog;
 	private static String value = "";
 	private static int selectionStatus = 0;
@@ -26,19 +28,19 @@ public class StructuresDialog extends JDialog {
 	private DefaultListModel<String> listModel;
 	
 	
-	public static int showDialog(Component comp) {
+	public static int showDialog(Component comp, GameOfLife g) {
 		
-		dialog = new StructuresDialog(JOptionPane.getFrameForComponent(comp));
+		dialog = new StructuresDialog(JOptionPane.getFrameForComponent(comp), g);
 		
 		dialog.setVisible(true);
 		return selectionStatus;
 	} 
 
 	
-	public StructuresDialog(Frame owner) {
+	public StructuresDialog(Frame owner, GameOfLife g) {
 		super(owner, "Game of Life - structures", true);
 		this.setSize(400, 200);
-		
+		game = g;
 		// Adding bottom panel for buttons
 		JPanel bottomPanel = new JPanel();
 		this.add(bottomPanel, BorderLayout.SOUTH);
@@ -47,7 +49,8 @@ public class StructuresDialog extends JDialog {
 		
 		// Adding list on the left
 		listModel = new DefaultListModel<String>();
-		for (int i = 0; i != 12;) {
+		listModel.addElement("Pond");
+		for (int i = 0; i != 11;) {
 			listModel.addElement("Structure nr " + ++i);
 		}
 		
@@ -67,6 +70,10 @@ public class StructuresDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				setSelectionStatus(1);
+				game.getGuiMgr().getStartButton().setEnabled(false);
+				for (int i = 0; i < 4; i ++)
+					game.getGuiMgr().getMenuItem()[i].setEnabled(false);
+				game.getGuiMgr().getStructuresButton().setEnabled(false);
 				setValue(list.getSelectedValue());
 				setVisible(false);
 			}
@@ -102,6 +109,11 @@ public class StructuresDialog extends JDialog {
 
 	public String getChosenOption() {
 		return value;
+	}
+
+
+	public static int getStatus() {
+		return selectionStatus;
 	}
 
 }
