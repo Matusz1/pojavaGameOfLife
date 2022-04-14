@@ -18,6 +18,9 @@ public class CellsHolder {
 				cells[i][j] = new Cell(i, j);
 			}
 		}
+		
+		//Left as a sign of gratitude for serving for so long :-)
+		/*
 		cells[11][12].setAlive(true);
 		cells[12][12].setAlive(true);
 		cells[12][13].setAlive(true);
@@ -31,7 +34,7 @@ public class CellsHolder {
 		cells[32][13].setAlive(true);
 		cells[33][12].setAlive(true);
 		cells[33][13].setAlive(true);
-		
+		*/
 	}
 	
 	static void initQuickBackup () {
@@ -113,7 +116,7 @@ public class CellsHolder {
 		quickBackup[x][y].setAlive(b); 
 	}
 	
-	//Probably unnecesary, see: Cell.setAlive()
+	// Probably unnecesary, see: Cell.setAlive()
 	static void clearLifetimes () {
 		for (Cell[] row : cells) {
 			for (Cell cell : row) {

@@ -218,8 +218,8 @@ public class GuiManager extends JFrame {
 		structuresButton.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int status = StructuresDialog.showDialog(GuiManager.this, game);
-				if (status == 0) {
+				boolean status = StructuresDialog.showDialog(GuiManager.this, game);
+				if (!status) {
 					System.out.println("No structure selected");
 				}
 				else {

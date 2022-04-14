@@ -19,16 +19,16 @@ public class StructuresDialog extends JDialog {
 	
 	private static final long serialVersionUID = 1L;
 	
-	GameOfLife game;
+	static GameOfLife game;
 	
 	private static StructuresDialog dialog;
 	private static String value = "";
-	private static int selectionStatus = 0;
+	private static boolean selectionStatus = false;
 	private JList<String> list;
 	private DefaultListModel<String> listModel;
 	
 	
-	public static int showDialog(Component comp, GameOfLife g) {
+	public static boolean showDialog(Component comp, GameOfLife g) {
 		
 		dialog = new StructuresDialog(JOptionPane.getFrameForComponent(comp), g);
 		
@@ -50,9 +50,8 @@ public class StructuresDialog extends JDialog {
 		// Adding list on the left
 		listModel = new DefaultListModel<String>();
 		listModel.addElement("Pond");
-		for (int i = 0; i != 11;) {
-			listModel.addElement("Structure nr " + ++i);
-		}
+		listModel.addElement("Glider");
+		listModel.addElement("Glider Spawner");
 		
 		list = new JList<String>(listModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -69,11 +68,7 @@ public class StructuresDialog extends JDialog {
 		selectButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setSelectionStatus(1);
-				game.getGuiMgr().getStartButton().setEnabled(false);
-				for (int i = 0; i < 4; i ++)
-					game.getGuiMgr().getMenuItem()[i].setEnabled(false);
-				game.getGuiMgr().getStructuresButton().setEnabled(false);
+				setSelectionStatus(true);
 				setValue(list.getSelectedValue());
 				setVisible(false);
 			}
@@ -90,11 +85,28 @@ public class StructuresDialog extends JDialog {
 		bottomPanel.add(cancelButton);
 		
 		// Setting the default
-		setSelectionStatus(0);
+		setSelectionStatus(false);
 	}
-
-	private void setSelectionStatus(int i) {
-		selectionStatus = i;
+	
+	/*TODO - Should take care of (dis)enabling buttons but gets in a way of Load File menu option.
+	 *Can be fixed by making Load File always enabled but informing the user 
+	 *either on terminal or in frame notification 
+	 *when there is no backup file yet*
+	 *See: GameManager -> public void makeQuickBackup()*/
+	static void setSelectionStatus(boolean b) {
+		selectionStatus = b;
+		if (selectionStatus) {
+			game.getGuiMgr().getStartButton().setEnabled(false);
+			for (int i = 0; i < 4; i ++)
+				game.getGuiMgr().getMenuItem()[i].setEnabled(false);
+			game.getGuiMgr().getStructuresButton().setEnabled(false);
+		}
+		else if (!selectionStatus) {
+			game.getGuiMgr().getStartButton().setEnabled(true);
+			for (int i = 0; i < 4; i ++)
+				game.getGuiMgr().getMenuItem()[i].setEnabled(true);
+			game.getGuiMgr().getStructuresButton().setEnabled(true);
+		}
 	}
 
 
@@ -112,7 +124,7 @@ public class StructuresDialog extends JDialog {
 	}
 
 
-	public static int getStatus() {
+	public static boolean getStatus() {
 		return selectionStatus;
 	}
 
