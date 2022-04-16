@@ -22,7 +22,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GuiManager extends JFrame {
 
-	//private static final long serialVersionUID = -1446237294057835141L;
+	private static final long serialVersionUID = -1446237294057835141L;
 
 	private GameOfLife game;
 	
@@ -55,7 +55,7 @@ public class GuiManager extends JFrame {
 		grid.setHgap(5);
 		grid.setVgap(5);
 		optionsPanel = new JPanel(grid);
-		gamePanel = new GamePanel(game);
+		gamePanel = new GamePanel();
 		
 		gamePanel.setBackground(Color.white);
 		
@@ -99,7 +99,6 @@ public class GuiManager extends JFrame {
 		fileMenuItems[3] = new JMenuItem("Load quick backup");
 		fileMenuItems[4] = new JMenuItem("Exit");
 		
-		fileMenuItems[3].setEnabled(false);
 		
 		fileMenuItems[0].addActionListener(new ActionListener() {
 			@Override
@@ -231,7 +230,7 @@ public class GuiManager extends JFrame {
 		blackCellsButton.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				game.getGameMgr().setColorfulCells(false);
+				gamePanel.setColorCells(false);
 				colorCellsButton.setEnabled(true);
 				blackCellsButton.setEnabled(false);
 				gamePanel.repaint();
@@ -242,7 +241,7 @@ public class GuiManager extends JFrame {
 		colorCellsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				game.getGameMgr().setColorfulCells(true);
+				gamePanel.setColorCells(true);
 				colorCellsButton.setEnabled(false);
 				blackCellsButton.setEnabled(true);
 				gamePanel.repaint();
@@ -275,7 +274,6 @@ public class GuiManager extends JFrame {
 		tmpButton.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				CellsHolder.updateNeigboursCount();
 				CellsHolder.updateAliveStatus();
 				gamePanel.repaint();

@@ -2,11 +2,14 @@ package gof;
 
 public class CellsHolder {
 	
-	static final int WIDTH = 512;
-	static final int HEIGHT = 512;
+	static final int WIDTH = 64;
+	static final int HEIGHT = 64;
 	
 	private static Cell[][] cells;
 	private static Cell[][] quickBackup;
+	
+	
+	
 	
 	/*
 	 * Initializes all the cells in array and initializes backup information
@@ -37,6 +40,9 @@ public class CellsHolder {
 		*/
 	}
 	
+	
+	
+	
 	static void initQuickBackup () {
 		quickBackup = new Cell[HEIGHT][WIDTH];
 		for (int i = 0; i != HEIGHT; ++i) {
@@ -45,15 +51,27 @@ public class CellsHolder {
 			}
 		}
 	}
+	
+	
+	
 	/*
 	 * Returns cell with given coordinates,
 	 * while taking care of periodic boundary conditions
 	 */
 	static Cell getCell(int x, int y) {
+		while (x < 0) {
+			x += WIDTH;
+		}
+		while (y < 0) {
+			y += HEIGHT;
+		}
 		int _x = x % WIDTH;
 		int _y = y % HEIGHT;
 		return cells[_x][_y];
 	}
+	
+	
+	
 	
 	/*
 	 * Iterates over every living cell,
@@ -63,11 +81,14 @@ public class CellsHolder {
 		for (Cell[] row : cells) {
 			for (Cell cell : row) {
 				if (cell.isAlive()) {
-					cell.updateNeigbours();
+					cell.updateNeighbors();
 				}
 			}
 		}
 	}
+	
+	
+	
 	
 	
 	/*
@@ -77,21 +98,29 @@ public class CellsHolder {
 	static void updateAliveStatus() {
 		for (Cell[] row : cells) {
 			for (Cell cell : row) {
-				final int n = cell.getNeigbourCount();
-				if (cell.isAlive() && (n != 2 && n != 3)) {
-					cell.setAlive(false);
-					cell.setLifetime(0);
+				final int n = cell.getNeighborCount();
+				
+				if (cell.isAlive()) {
+					if (n != 2 && n != 3) {
+						cell.kill();
+					}
+					else {
+						cell.incrementLifetime();
+					}
 				}
-				else if (cell.isAlive() == false && n == 3) {
-					cell.setAlive(true);
+				else {
+					if (n == 3) {
+						cell.revive();
+					}
 				}
-				else if (cell.isAlive() && (n == 2 || n == 3)) {
-					cell.incrementLifetime();
-				}
-				cell.setNeighbourCount(0);
+				
+				cell.resetNeighbourCount();
 			}	
 		}
 	}
+	
+	
+	
 	
 	/*
 	 * Sets every cell to dead state
@@ -99,7 +128,18 @@ public class CellsHolder {
 	static void clearAll() {
 		for (Cell[] row : cells) {
 			for (Cell cell : row) {
-				cell.setAlive(false);
+				cell.kill();
+			}
+		}
+	}
+	
+	/*
+	 * Clears the backup - kills all the cells in backup
+	 */
+	static void clearBackup() {
+		for (Cell[] row : cells) {
+			for (Cell cell : row) {
+				cell.kill();
 			}
 		}
 	}
@@ -112,16 +152,26 @@ public class CellsHolder {
 		return quickBackup;
 	}
 	
-	static void setQuickBackup (int x, int y, boolean b) {
-		quickBackup[x][y].setAlive(b); 
-	}
-	
-	// Probably unnecesary, see: Cell.setAlive()
-	static void clearLifetimes () {
-		for (Cell[] row : cells) {
-			for (Cell cell : row) {
-				cell.setLifetime(0);
+	static void makeQuickBackup() {
+		if (quickBackup == null) {
+			quickBackup = new Cell[WIDTH][HEIGHT];
+		}
+		
+		for (int i = 0; i != WIDTH; ++i) {
+			for (int j = 0; j != HEIGHT; ++j) {
+				quickBackup[i][j] = new Cell(cells[i][j]);
 			}
 		}
 	}
+	
+	static void loadQuickBackup() {
+		if (quickBackup != null) {
+			for (int i = 0; i != WIDTH; ++i) {
+				for (int j = 0; j != HEIGHT; ++j) {
+					cells[i][j] = new Cell(quickBackup[i][j]);
+				}
+			}
+		}
+	}
+	
 }

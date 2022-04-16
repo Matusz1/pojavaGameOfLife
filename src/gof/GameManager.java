@@ -14,7 +14,6 @@ public class GameManager {
 	
 	private boolean running;
 	private int gameSpeed;
-	private boolean colorfulCells = false;
 	
 	GameManager(GameOfLife g) {
 		game = g;
@@ -30,14 +29,6 @@ public class GameManager {
 		gameSpeed = speed;
 	}
 	
-	public void setColorfulCells(boolean b) {
-		colorfulCells = b;
-	}
-	
-	public boolean getColorfulCells () {
-		return colorfulCells;
-	}
-
 	public void saveToFile(File file) {
 		System.out.println("Saving to file: " + file.getName());
 		
@@ -85,8 +76,10 @@ public class GameManager {
 		    			else if (byteRead - 48 == 1) {
 		    				byteReadBoolean = true;
 		    			}
-		    			CellsHolder.getCells()[x][y].setAlive(byteReadBoolean);
-		    			CellsHolder.getCells()[x][y].setLifetime(reader.read() - 48);
+		    			// TODO: reimplement
+		    			//CellsHolder.getCells()[x][y].setAlive(byteReadBoolean);
+		    			// TODO: reimplement
+		    			//CellsHolder.getCells()[x][y].setLifetime(reader.read() - 48);
 		    		}
 		    		else
 		    			break;
@@ -98,29 +91,18 @@ public class GameManager {
 		}
 	}
 
+	/*
+	 * Makes quick backup/quicksave of current cells state
+	 */
 	public void makeQuickBackup() {
-		System.out.println("Making quick backup");
-		if (CellsHolder.getQuickBackup() == null) {
-			CellsHolder.initQuickBackup();
-			game.getGuiMgr().getMenuItem()[3].setEnabled(true);
-		}
-		
-		for (int y = 0; y < CellsHolder.HEIGHT; y++)
-	    	for (int x = 0; x < CellsHolder.WIDTH; x++) {
-	    		CellsHolder.getQuickBackup()[x][y].setAlive(CellsHolder.getCells()[x][y].isAlive());
-	    		CellsHolder.getQuickBackup()[x][y].setLifetime(CellsHolder.getCells()[x][y].getLifetime());
-	    	}
+		System.out.println("Making quick backup");		
+		CellsHolder.makeQuickBackup();
 	}
 
 	public void loadQuickBackup() {
 		System.out.println("Loading quick backup");
-			CellsHolder.clearAll();
-			for (int y = 0; y < CellsHolder.HEIGHT; y++)
-				for (int x = 0; x < CellsHolder.WIDTH; x++) {
-					CellsHolder.getCells()[x][y].setAlive(CellsHolder.getQuickBackup()[x][y].isAlive());
-					CellsHolder.getCells()[x][y].setLifetime(CellsHolder.getQuickBackup()[x][y].getLifetime());
-				}
-			game.getGuiMgr().getGamePanel().repaint();
+		CellsHolder.loadQuickBackup();
+		game.getGuiMgr().getGamePanel().repaint();
 	}
 
 	public void addStructure(String string) {
