@@ -1,4 +1,4 @@
-package gof;
+package gof_zooming;
 
 import java.awt.Color;
 
@@ -36,8 +36,6 @@ public class Cell {
 		this.neighborCount = cell.neighborCount;
 	}
 	
-	
-	
 	/*
 	 * Returns neighboring cell that is in position
 	 * (dx, dy) with respect to this cell
@@ -46,9 +44,7 @@ public class Cell {
 		return CellsHolder.getCell(xPos + dx, yPos + dy);
 	}
 	
-	
-	
-	
+
 	/*
 	 * Takes every neighbor of this cell
 	 * and increments its neighbor count by 1
@@ -58,7 +54,6 @@ public class Cell {
 			getNeighbor(XPOS_NEIGHBOURS[i], YPOS_NEIGHBOURS[i]).incrementNeighborCount();
 		}
 	}
-	
 	
 	void kill() {
 		lifetime = 0;
@@ -71,10 +66,6 @@ public class Cell {
 	private void incrementNeighborCount() {
 		++neighborCount;
 	}
-
-	boolean isAlive() {
-		return lifetime != 0;
-	}
 	
 	public int getNeighborCount() {
 		return neighborCount;
@@ -86,6 +77,10 @@ public class Cell {
 	
 	public int getLifetime() {
 		return lifetime;
+	}
+	
+	public void setLifetime (int l) {
+		lifetime = l;
 	}
 
 
@@ -100,8 +95,6 @@ public class Cell {
 		default: return new Color(0x3ffc00);
 		}
 	}
-
-
 
 	public int getX() {
 		return xPos;

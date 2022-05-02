@@ -1,4 +1,4 @@
-package gof;
+package gof_zooming;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -203,7 +203,6 @@ public class GuiManager extends JFrame {
 		stopButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				gameSpeedSlider.setEnabled(true);
 				structuresButton.setEnabled(true);
 				fileMenu.setEnabled(true);

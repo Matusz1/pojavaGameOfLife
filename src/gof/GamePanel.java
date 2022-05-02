@@ -1,4 +1,4 @@
-package gof;
+package gof_zooming;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -42,7 +42,7 @@ public class GamePanel extends JPanel {
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
 				
-				// Befor zooming we move top-left corner to mouse position
+				// Before zooming we move top-left corner to mouse position
 				minorX += xMousePos;
 				minorY += yMousePos;
 				fixOffsets();
@@ -66,6 +66,7 @@ public class GamePanel extends JPanel {
 				fixOffsets();
 				
 				GamePanel.this.repaint();
+
 			}
 		});
 		
@@ -73,7 +74,6 @@ public class GamePanel extends JPanel {
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
@@ -85,13 +85,11 @@ public class GamePanel extends JPanel {
 			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
@@ -103,7 +101,7 @@ public class GamePanel extends JPanel {
 				}
 				else {
 					Cell cell = getCellAtMousePosition();
-					if (cell.isAlive())
+					if (cell.getLifetime() != 0)
 						cell.kill();
 					else
 						cell.revive();
@@ -123,7 +121,7 @@ public class GamePanel extends JPanel {
 			}
 			
 			/* TODO - an idea: to draw new cells 
-			 * by a quickfire when holding a particular keyboard key?? */
+			 * by quickfire while holding a particular keyboard key?? */
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				xMousePos = e.getX();
@@ -242,23 +240,10 @@ public class GamePanel extends JPanel {
 		g.setColor(Color.gray);
 		/* Possibly-helpful-in-future formula for upper left pixel 
 		 * to start drawing a box that is below the mouse */
-		final int xRect = (int)Math.floor((xMousePos - (int)minorX%boxSize - boxSize)/boxSize)*boxSize + (int)minorX%boxSize + boxSize;
-		final int yRect = (int)Math.floor((yMousePos - (int)minorY%boxSize - boxSize)/boxSize)*boxSize + (int)minorY%boxSize + boxSize;
-		switch (StructuresDialog.getValue()) {
-		case "Pond":
-			for (int i = 0; i < Structure.pond.getVY().length; i++)
-				g.fillRect(xRect + (Structure.pond.getVX()[i] - 1)*boxSize + 2, yRect + (Structure.pond.getVY()[i] - 1)*boxSize + 2, boxSize - 4, boxSize - 4);
-			break;
-		case "Glider":
-			for (int i = 0; i < Structure.glider.getVY().length; i++)
-				g.fillRect(xRect + (Structure.glider.getVX()[i] - 2)*boxSize + 2, yRect + (Structure.glider.getVY()[i] - 2)*boxSize + 2, boxSize - 4, boxSize - 4);
-			break;
-		case "Glider Spawner":
-			//-14 like -2 shifts the mouse in relation to the displayed structure by vector [14,2]. Elsewhere likewise.
-			for (int i = 0; i < Structure.gliderSpawner.getVY().length; i++)
-				g.fillRect(xRect + (Structure.gliderSpawner.getVX()[i] - 14)*boxSize + 2, yRect + (Structure.gliderSpawner.getVY()[i] - 2)*boxSize + 2, boxSize - 4, boxSize - 4);
-			break;
-		}
+		final int xRect = (int)Math.floor((xMousePos - boxSize + minorX)/boxSize)*boxSize + boxSize - minorX;
+		final int yRect = (int)Math.floor((yMousePos - boxSize + minorY)/boxSize)*boxSize + boxSize - minorY;
+		for (int i = 0; i < Structure.getStructuresMap().get(StructuresDialog.getValue()).getVY().length; i++)
+			drawCell (xRect + (Structure.getStructuresMap().get(StructuresDialog.getValue()).getVX()[i])*boxSize, yRect + (Structure.getStructuresMap().get(StructuresDialog.getValue()).getVY()[i])*boxSize, g);
 	}
 	
 	
@@ -266,26 +251,11 @@ public class GamePanel extends JPanel {
 	
 	// For making the highlighted cells alive 
 	public void drawStructure (String value) {
-		// Possibly-helpful-in-future formula for the box that is below the mouse
-		final int xBase = (int)Math.floor((xMousePos - minorX)/boxSize);
-		final int yBase = (int)Math.floor((yMousePos - minorY)/boxSize);
-		switch (value) {
-		case "Pond":
-			for (int i = 0; i < Structure.pond.getVY().length; i++)
-				CellsHolder.getCell(xBase + Structure.pond.getVX()[i] - 1, yBase + Structure.pond.getVY()[i] - 1).revive();
-			break;
-		case "Glider":
-			for (int i = 0; i < Structure.glider.getVY().length; i++)
-				CellsHolder.getCell(xBase + Structure.glider.getVX()[i] - 2, yBase + Structure.glider.getVY()[i] - 2).revive();
-			break;	
-		case "Glider Spawner":
-			for (int i = 0; i < Structure.gliderSpawner.getVY().length; i++)
-				CellsHolder.getCell(xBase + Structure.gliderSpawner.getVX()[i] - 14, yBase + Structure.gliderSpawner.getVY()[i] - 2).revive();
-			break;
-		}
+		for (int i = 0; i < Structure.getStructuresMap().get(StructuresDialog.getValue()).getVY().length; i++)
+			CellsHolder.getCell(getCellAtMousePosition().getX() + Structure.getStructuresMap().get(StructuresDialog.getValue()).getVX()[i], getCellAtMousePosition().getY() + Structure.getStructuresMap().get(StructuresDialog.getValue()).getVY()[i]).revive();
+		
 		StructuresDialog.setSelectionStatus(false);
 	}
-	
 	
 	
 	
@@ -317,7 +287,7 @@ public class GamePanel extends JPanel {
 		for (int i = 0; i < width + boxSize; i += boxSize) {
 			for (int j = 0; j < height + boxSize; j += boxSize) {
 				Cell cell = getCellAtPosition(i, j);
-				if (cell.isAlive()) {
+				if (cell.getLifetime() != 0) {
 					if (colorCells) {
 						g.setColor(cell.getColor());
 					}
@@ -340,12 +310,9 @@ public class GamePanel extends JPanel {
 	 * Decides if the cell needs to be wider and higher by 4 pixels based on boxSize.
 	 */
 	private void drawCell(int x, int y, Graphics g) {
-		if (boxSize < 7) {
-			g.fillRect(x, y, boxSize, boxSize);
-		}
-		else {
-			g.fillRect(x+3, y+2, boxSize-3, boxSize-3);
-		}
+		//TODO - maybe would look nicer if space changed based on zoom
+		int space = 3; 
+		g.fillRect(x + space, y + space , boxSize - 2*space, boxSize - 2*space);
 	}
 		
 	
@@ -353,5 +320,4 @@ public class GamePanel extends JPanel {
 	public void setColorCells(boolean b) {
 		colorCells = b;
 	}
-
 }

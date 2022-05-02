@@ -1,4 +1,4 @@
-package gof;
+package gof_zooming;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -49,8 +49,17 @@ public class StructuresDialog extends JDialog {
 		
 		// Adding list on the left
 		listModel = new DefaultListModel<String>();
+		//Basics - still - oscilling 
 		listModel.addElement("Pond");
+		//Long living
+		listModel.addElement("Diehard");
+		listModel.addElement("Acorn");
+		//Spaceships
 		listModel.addElement("Glider");
+		listModel.addElement("Light-weight spaceship");
+		listModel.addElement("Middle-weight spaceship");
+		listModel.addElement("Heavy-weight spaceship");
+		//Guns
 		listModel.addElement("Glider Spawner");
 		
 		list = new JList<String>(listModel);
@@ -91,7 +100,7 @@ public class StructuresDialog extends JDialog {
 	/*TODO - Should take care of (dis)enabling buttons but gets in a way of Load File menu option.
 	 *Can be fixed by making Load File always enabled but informing the user 
 	 *either on terminal or in frame notification 
-	 *when there is no backup file yet*
+	 *when there is no backup file yet
 	 *See: GameManager -> public void makeQuickBackup()*/
 	static void setSelectionStatus(boolean b) {
 		selectionStatus = b;

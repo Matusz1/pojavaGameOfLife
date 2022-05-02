@@ -1,4 +1,4 @@
-package gof;
+package gof_zooming;
 
 // Testig GitHub
 

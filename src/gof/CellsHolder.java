@@ -1,9 +1,9 @@
-package gof;
+package gof_zooming;
 
 public class CellsHolder {
 	
-	static final int WIDTH = 64;
-	static final int HEIGHT = 64;
+	static final int WIDTH = 512;
+	static final int HEIGHT = 512;
 	
 	private static Cell[][] cells;
 	private static Cell[][] quickBackup;
@@ -80,17 +80,14 @@ public class CellsHolder {
 	static void updateNeigboursCount() {
 		for (Cell[] row : cells) {
 			for (Cell cell : row) {
-				if (cell.isAlive()) {
+				if (cell.getLifetime() != 0) {
 					cell.updateNeighbors();
 				}
 			}
 		}
 	}
 	
-	
-	
-	
-	
+
 	/*
 	 * Decides if cells is meant to be alive or dead,
 	 * resets the neighbor count for every cell to 0
@@ -100,7 +97,7 @@ public class CellsHolder {
 			for (Cell cell : row) {
 				final int n = cell.getNeighborCount();
 				
-				if (cell.isAlive()) {
+				if (cell.getLifetime() != 0) {
 					if (n != 2 && n != 3) {
 						cell.kill();
 					}
@@ -137,7 +134,7 @@ public class CellsHolder {
 	 * Clears the backup - kills all the cells in backup
 	 */
 	static void clearBackup() {
-		for (Cell[] row : cells) {
+		for (Cell[] row : quickBackup) {
 			for (Cell cell : row) {
 				cell.kill();
 			}

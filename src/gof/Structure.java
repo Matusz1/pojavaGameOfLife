@@ -1,4 +1,7 @@
-package gof;
+package gof_zooming;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Structure {
 	
@@ -39,13 +42,48 @@ public class Structure {
 		return VectorY;
 	}
 	
+	
 	// Structures Library that can and should be enlarged
-	static Structure pond = new Structure (4, 4, new int[]{0,0,1,1,2,2,3,3}, new int[]{1,2,0,3,0,3,1,2});
+	static private Map<String, Structure> structuresMap;
+	static {
+		structuresMap = new HashMap<>();
+		
+		//Basics - still - oscilling 
+		structuresMap.put ("Pond", new Structure (4, 4, 
+				new int[]{-1,-1,0,0,1,1,2,2},
+				new int[]{0,1,-1,2,-1,2,0,1}));
+		
+		//Long living
+		structuresMap.put ("Diehard", new Structure (3, 8,
+				new int[] {-2,-1,-1,0,0,0,0},
+				new int[] {1,-5,-4,-4,0,1,2}));
+		structuresMap.put ("Acorn", new Structure (3, 7,
+				new int[] {-1,0,1,1,1,1,1},
+				new int[] {-2,0,-3,-2,1,2,3}));
+		
+		//Spaceships
+		structuresMap.put ("Glider", new Structure (3, 3, 
+				new int[] {-2,-1,0,0,0}, 
+				new int[] {-1,0,-2,-1,0}));
+		structuresMap.put("Light-weight spaceship", new Structure (4, 5,
+				new int[] {-2,-2,-1,0,0,1,1,1,1},
+				new int[] {-3,0,1,-3,1,-2,-1,0,1}));
+		structuresMap.put("Middle-weight spaceship", new Structure (5, 6,
+				new int[] {-4,-3,-3,-2,-1,-1,0,0,0,0,0}, 
+				new int[] {0,-2,2,3,-2,3,-1,0,1,2,3}));
+		structuresMap.put("Heavy-weight spaceship", new Structure (5, 7,
+				new int[] {-3,-3,-2,-2,-1,0,0,1,1,1,1,1,1}, 
+				new int[] {0,1,-2,3,4,-2,4,-1,0,1,2,3,4}));
+		
+		//Guns
+		structuresMap.put ("Glider Spawner", new Structure (9, 36, 
+				new int[] {-2,-1,-1,0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,3,3,4,4,4,5,5,6,6}, 
+				new int[] {10,8,10,-2,-1,6,7,20,21,-3,1,6,7,20,21,-14,-13,-4,2,6,7,-14,-13,-4,0,2,3,8,10,-4,2,10,-3,1,-2,-1}));
+	}
 	
-	static Structure glider = new Structure (3, 3, new int[] {0,1,2,2,2}, new int[] {1,2,0,1,2});
 	
-	static Structure gliderSpawner = 
-			new Structure (9, 36, 
-			new int[] {0,1,1,2,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5,5,5,5,5,6,6,6,7,7,8,8,}, 
-			new int[] {24,22,24,12,13,20,21,34,35,11,15,20,21,34,35,0,1,10,16,20,21,0,1,10,14,16,17,22,24,10,16,24,11,15,12,13});
+	public static Map<String, Structure> getStructuresMap () {
+		return structuresMap;
+	}
+
 }
