@@ -180,9 +180,11 @@ public class StructuresDialog extends JDialog {
 		selectButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				setSelectionStatus(true);
-				setValue(list.getSelectedValue());
-				setVisible(false);
+				if (list.getSelectedValue() != null) {
+					setSelectionStatus(true);
+					setValue(list.getSelectedValue());
+					setVisible(false);
+				}
 			}
 		});
 		bottomPanel.add(selectButton);
