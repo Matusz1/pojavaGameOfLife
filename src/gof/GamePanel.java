@@ -242,7 +242,7 @@ public class GamePanel extends JPanel {
 		 * to start drawing a box that is below the mouse */
 		final int xRect = (int)Math.floor((xMousePos - boxSize + minorX)/boxSize)*boxSize + boxSize - minorX;
 		final int yRect = (int)Math.floor((yMousePos - boxSize + minorY)/boxSize)*boxSize + boxSize - minorY;
-		for (int i = 0; i < Structure.getStructuresMap().get(StructuresDialog.getValue()).getVY().length; i++)
+		for (int i = 0; i < Structure.getStructuresMap().get(StructuresDialog.getValue()).getVX().length; i++)
 			drawCell (xRect + (Structure.getStructuresMap().get(StructuresDialog.getValue()).getVX()[i])*boxSize, yRect + (Structure.getStructuresMap().get(StructuresDialog.getValue()).getVY()[i])*boxSize, g);
 	}
 	

@@ -5,9 +5,13 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -27,10 +31,17 @@ public class StructuresDialog extends JDialog {
 	private JList<String> list;
 	private DefaultListModel<String> listModel;
 	
+	private static int types = 4;
+	private static int maxMembers = 20;
+	private static String[][] structuresLib = new String[types][maxMembers];
+	private JCheckBox[] boxes;
+
+	
 	
 	public static boolean showDialog(Component comp, GameOfLife g) {
 		
-		dialog = new StructuresDialog(JOptionPane.getFrameForComponent(comp), g);
+		if (dialog == null)
+			dialog = new StructuresDialog(JOptionPane.getFrameForComponent(comp), g);
 		
 		dialog.setVisible(true);
 		return selectionStatus;
@@ -39,37 +50,129 @@ public class StructuresDialog extends JDialog {
 	
 	public StructuresDialog(Frame owner, GameOfLife g) {
 		super(owner, "Game of Life - structures", true);
-		this.setSize(400, 200);
+		this.setSize(480, 480);
 		game = g;
 		// Adding bottom panel for buttons
 		JPanel bottomPanel = new JPanel();
+		JPanel titlesPanel = new JPanel();
 		this.add(bottomPanel, BorderLayout.SOUTH);
 		
+		//Adding upper panel with checkboxes
+		this.add(titlesPanel, BorderLayout.NORTH);
+		boxes = new JCheckBox[5];
+		ButtonGroup checkBoxGroup = new ButtonGroup();
+		
+		for (int i = 0; i < 5; i++) {
+			boxes[i] = new JCheckBox("", true);
+			checkBoxGroup.add(boxes[i]);
+			titlesPanel.add(boxes[i]);
+		}
+
+		boxes[0].setText("ALL");
+		boxes[1].setText("Oscillators");
+		boxes[2].setText("Metuselahs");
+		boxes[3].setText("Spaceships");
+		boxes[4].setText("Guns");
+				
+		boxes[0].addItemListener(new ItemListener () {
+			@Override
+			public void itemStateChanged (ItemEvent e) {
+				listModel.removeAllElements();
+				for (int t = 0; t < types; t++)
+					for (int m = 0; m < maxMembers; m++)
+						if (structuresLib[t][m] != null) {
+							listModel.addElement (structuresLib[t][m]);
+						}
+						else 
+							break;
+			}
+		});
+		boxes[1].addItemListener(new ItemListener () {
+			@Override
+			public void itemStateChanged (ItemEvent e) {
+				listModel.removeAllElements();
+				for (int m = 0; m < maxMembers; m++)
+					if (structuresLib[0][m] != null) {
+						listModel.addElement (structuresLib[0][m]);
+					}
+					else 
+						break;
+			}
+		});
+		boxes[2].addItemListener(new ItemListener () {
+			@Override
+			public void itemStateChanged (ItemEvent e) {
+				listModel.removeAllElements();
+				for (int m = 0; m < maxMembers; m++)
+					if (structuresLib[1][m] != null) {
+						listModel.addElement (structuresLib[1][m]);
+					}
+					else 
+						break;
+			}
+		});
+		boxes[3].addItemListener(new ItemListener () {
+			@Override
+			public void itemStateChanged (ItemEvent e) {
+				listModel.removeAllElements();
+				for (int m = 0; m < maxMembers; m++)
+					if (structuresLib[2][m] != null) {
+						listModel.addElement (structuresLib[2][m]);
+					}
+					else 
+						break;
+			}
+		});
+		boxes[4].addItemListener(new ItemListener () {
+			@Override
+			public void itemStateChanged (ItemEvent e) {
+				listModel.removeAllElements();
+				for (int m = 0; m < maxMembers; m++)
+					if (structuresLib[3][m] != null) {
+						listModel.addElement (structuresLib[3][m]);
+					}
+					else 
+						break;
+			}
+		});
 		
 		
 		// Adding list on the left
 		listModel = new DefaultListModel<String>();
-		//Basics - still - oscilling 
-		listModel.addElement("Pond");
-		//Long living
-		listModel.addElement("Diehard");
-		listModel.addElement("Acorn");
-		//Spaceships
-		listModel.addElement("Glider");
-		listModel.addElement("Light-weight spaceship");
-		listModel.addElement("Middle-weight spaceship");
-		listModel.addElement("Heavy-weight spaceship");
-		//Guns
-		listModel.addElement("Glider Spawner");
+
+		//Oscillators - type 0
+		addStructure (0, "Pond");
+		addStructure (0, "Pulsar");
+		addStructure (0, "I-Column");
+		addStructure (0, "Gabriel's p138");
+		//Long living - type 1
+		addStructure (1, "The R-pentomino");
+		addStructure (1, "Diehard");
+		addStructure (1, "Acorn");
+		//Spaceships - type 2
+		addStructure (2, "Glider");
+		addStructure (2, "Light-weight spaceship");
+		addStructure (2, "Middle-weight spaceship");
+		addStructure (2, "Heavy-weight spaceship");
+		//Guns - type 3
+		addStructure (3, "Simkin glider gun");
+		addStructure (3, "Gosper glider gun");
+		
+		listModel.removeAllElements();
+		for (int i = 0; i < types; i++) 
+			for (int j = 0; j < maxMembers; j++)
+				if (structuresLib[i][j] != null)
+					listModel.addElement(structuresLib[i][j]);
+				else
+					break;
 		
 		list = new JList<String>(listModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setSelectedIndex(0);
-		list.setLayoutOrientation(JList.VERTICAL);
-		list.setVisibleRowCount(-1);
+		list.setLayoutOrientation(JList.VERTICAL_WRAP);
+		list.setVisibleRowCount(5);
 		JScrollPane listScrollPane = new JScrollPane(list);
 		this.add(listScrollPane);
-		
 		
 		
 		// Creating and adding the buttons
@@ -137,4 +240,11 @@ public class StructuresDialog extends JDialog {
 		return selectionStatus;
 	}
 
+	private static void addStructure (int type, String name) {
+			for (int j = 0; j != maxMembers; ++j) 
+				if (structuresLib[type][j] == null) {
+					structuresLib[type][j] = new String (name);
+					break;
+				}
+	}
 }
