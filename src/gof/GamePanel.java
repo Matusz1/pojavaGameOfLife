@@ -279,7 +279,7 @@ public class GamePanel extends JPanel {
 		for (int i = 0; i < Structure.getStructuresMap().get(StructuresDialog.getValue()).getVY().length; i++)
 			CellsHolder.getCell(getCellAtMousePosition().getX() + Structure.getXRotation(i), getCellAtMousePosition().getY() + Structure.getYRotation(i)).revive();
 		
-		Structure.setDirection(0);
+		Structure.resetDirection();
 		StructuresDialog.setSelectionStatus(false);
 	}
 	

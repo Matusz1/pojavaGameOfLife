@@ -151,7 +151,7 @@ public class Structure {
 		return direction;
 	}
 
-	public static void setDirection(int i) {
+	public static void resetDirection() {
 		direction = 0;
 	}
 
