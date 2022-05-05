@@ -12,6 +12,10 @@ public class Structure {
 	private int VectorY[];
 	private int VectorX[];
 	
+	// For rotation purposes
+	private static int direction = 0;
+	private static boolean reverse = false;
+	
 	// Currently the only constructor
 	public Structure (int Width, int Height, int VectorY[], int VectorX[]) {
 		this.Height = Height;
@@ -100,5 +104,65 @@ public class Structure {
 	public static Map<String, Structure> getStructuresMap () {
 		return structuresMap;
 	}
+	
+	public static int getXRotation(int i) {
+		switch (direction) {
+		case 0:
+			if (!reverse)
+				return +structuresMap.get(StructuresDialog.getValue()).getVX()[i];
+			else
+				return -structuresMap.get(StructuresDialog.getValue()).getVX()[i];
+		case 1:
+				return -structuresMap.get(StructuresDialog.getValue()).getVY()[i];
+		case 2:
+			if (!reverse)
+				return -structuresMap.get(StructuresDialog.getValue()).getVX()[i];
+			else
+				return +structuresMap.get(StructuresDialog.getValue()).getVX()[i];
+		case 3:
+				return +structuresMap.get(StructuresDialog.getValue()).getVY()[i];
+		default: 
+				return 0;
+		}
+	}
+	
+	public static int getYRotation(int i) {
+		switch (direction) {
+		case 0:
+			return +structuresMap.get(StructuresDialog.getValue()).getVY()[i];
+		case 1:
+			if (!reverse)
+				return +structuresMap.get(StructuresDialog.getValue()).getVX()[i];
+			else
+				return -structuresMap.get(StructuresDialog.getValue()).getVX()[i];
+		case 2:
+				return -structuresMap.get(StructuresDialog.getValue()).getVY()[i];
+		case 3:
+			if (!reverse)
+				return -structuresMap.get(StructuresDialog.getValue()).getVX()[i];
+			else
+				return +structuresMap.get(StructuresDialog.getValue()).getVX()[i];
+		default:
+				return 0;
+		}
+	}
 
+	public static int getDirection() {
+		return direction;
+	}
+
+	public static void setDirection(int i) {
+		direction = 0;
+	}
+
+	public static void nextDirection () {
+		direction++;
+		direction %= 4;
+	}
+
+	public static void reverseStructure() {
+		reverse = !reverse;
+	}
+	
+	
 }

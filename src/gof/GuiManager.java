@@ -38,7 +38,6 @@ public class GuiManager extends JFrame {
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
 	private JMenuItem[] fileMenuItems;
-	
 	private JSlider gameSpeedSlider;	
 	
 	// === Main Constructor === //
@@ -253,7 +252,9 @@ public class GuiManager extends JFrame {
 		
 		JPanel p1 = new JPanel(g);
 		JPanel p2 = new JPanel(g);
-		
+		JLabel manual = new JLabel ("Manual:");
+		JLabel manual1 = new JLabel ("R - rotate structure");
+		JLabel manual2 = new JLabel ("T - Flip structure");
 		p1.add(startButton);
 		p1.add(stopButton);
 		p2.add(blackCellsButton);
@@ -266,8 +267,6 @@ public class GuiManager extends JFrame {
 		optionsPanel.add(p2);
 		optionsPanel.add(structuresButton);
 		
-		
-		
 		// TEMPORARY
 		JButton tmpButton = new JButton("Next step");
 		tmpButton.addActionListener(new ActionListener() {	
@@ -278,7 +277,14 @@ public class GuiManager extends JFrame {
 				gamePanel.repaint();
 			}
 		});
+		
 		optionsPanel.add(tmpButton);
+		optionsPanel.add(manual);
+		optionsPanel.add(manual1);
+		optionsPanel.add(manual2);
+		
+		
+
 		
 	}
 	

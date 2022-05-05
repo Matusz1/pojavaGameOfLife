@@ -2,12 +2,13 @@ package gof_zooming;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel {
@@ -36,6 +37,9 @@ public class GamePanel extends JPanel {
 	
 	GamePanel() {
 		super();
+		
+		this.setFocusable(true);
+		this.requestFocus();
 		
 		this.addMouseWheelListener(new MouseWheelListener() {
 			
@@ -137,8 +141,29 @@ public class GamePanel extends JPanel {
 				repaint();
 			}
 		});
-	}
 	
+	this.addKeyListener(new KeyListener() {
+		@Override
+		public void keyPressed (KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_R)
+				Structure.nextDirection();
+			else if (e.getKeyCode() == KeyEvent.VK_T)
+				Structure.reverseStructure();
+				repaint();
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			
+		}
+	});
+	
+}
 	
 	/*
 	 * Recalculates major offsets, used after moving or zooming
@@ -243,7 +268,7 @@ public class GamePanel extends JPanel {
 		final int xRect = (int)Math.floor((xMousePos - boxSize + minorX)/boxSize)*boxSize + boxSize - minorX;
 		final int yRect = (int)Math.floor((yMousePos - boxSize + minorY)/boxSize)*boxSize + boxSize - minorY;
 		for (int i = 0; i < Structure.getStructuresMap().get(StructuresDialog.getValue()).getVX().length; i++)
-			drawCell (xRect + (Structure.getStructuresMap().get(StructuresDialog.getValue()).getVX()[i])*boxSize, yRect + (Structure.getStructuresMap().get(StructuresDialog.getValue()).getVY()[i])*boxSize, g);
+			drawCell (xRect + (Structure.getXRotation(i))*boxSize, yRect + (Structure.getYRotation(i))*boxSize, g);
 	}
 	
 	
@@ -252,8 +277,9 @@ public class GamePanel extends JPanel {
 	// For making the highlighted cells alive 
 	public void drawStructure (String value) {
 		for (int i = 0; i < Structure.getStructuresMap().get(StructuresDialog.getValue()).getVY().length; i++)
-			CellsHolder.getCell(getCellAtMousePosition().getX() + Structure.getStructuresMap().get(StructuresDialog.getValue()).getVX()[i], getCellAtMousePosition().getY() + Structure.getStructuresMap().get(StructuresDialog.getValue()).getVY()[i]).revive();
+			CellsHolder.getCell(getCellAtMousePosition().getX() + Structure.getXRotation(i), getCellAtMousePosition().getY() + Structure.getYRotation(i)).revive();
 		
+		Structure.setDirection(0);
 		StructuresDialog.setSelectionStatus(false);
 	}
 	
