@@ -35,11 +35,22 @@ public class GamePanel extends JPanel {
 	private int xMousePos = 0;
 	private int yMousePos = 0;
 	
+	public void setColorCells(boolean b) {
+		colorCells = b;
+	}
+	
 	GamePanel() {
 		super();
 		
+		// Used by Key Listener
 		this.setFocusable(true);
-		this.requestFocus();
+		this.requestFocus();		
+		
+		
+		/*****************************************************************************************************************************************
+		 ** 			LISTENERS																												**
+		 *****************************************************************************************************************************************/
+		
 		
 		this.addMouseWheelListener(new MouseWheelListener() {
 			
@@ -164,6 +175,12 @@ public class GamePanel extends JPanel {
 	});
 	
 }
+	/*****************************************************************************************************************************************
+	 ** 			DRAWING DEVICES																												**
+	 *****************************************************************************************************************************************/
+	
+	
+	
 	
 	/*
 	 * Recalculates major offsets, used after moving or zooming
@@ -197,9 +214,7 @@ public class GamePanel extends JPanel {
 		final int _y = (y + minorY) / boxSize + majorY;
 		return CellsHolder.getCell(_x, _y);
 	}
-	
-	
-	
+		
 	/*
 	 * Returns cell under mouse position
 	 */
@@ -285,7 +300,16 @@ public class GamePanel extends JPanel {
 		StructuresDialog.setSelectionStatus(false);
 	}
 	
-	
+	/*
+	 * Draws cell at positions x, y on the given object.
+	 * Decides if the cell needs to be wider and higher by 4 pixels based on boxSize.
+	 */
+	private void drawCell(int x, int y, Graphics g) {
+		//TODO - maybe would look nicer if space changed based on zoom
+		int space = 3; 
+		g.fillRect(x + space, y + space , boxSize - 2*space, boxSize - 2*space);
+	}
+		
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -330,21 +354,4 @@ public class GamePanel extends JPanel {
 			highlightStructure(g);
 	}
 
-
-	
-	/*
-	 * Draws cell at positions x, y on the given object.
-	 * Decides if the cell needs to be wider and higher by 4 pixels based on boxSize.
-	 */
-	private void drawCell(int x, int y, Graphics g) {
-		//TODO - maybe would look nicer if space changed based on zoom
-		int space = 3; 
-		g.fillRect(x + space, y + space , boxSize - 2*space, boxSize - 2*space);
-	}
-		
-	
-
-	public void setColorCells(boolean b) {
-		colorCells = b;
-	}
 }

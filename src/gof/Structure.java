@@ -94,7 +94,7 @@ public class Structure {
 	
 	
 	/*********************************************************
-	 *					STRUCTURES LIBRARY                   *
+	 *	////////////||	STRUCTURES LIBRARY   || \\\\\\\\\\\\ *
 	 *********************************************************/
 	
 	
@@ -102,7 +102,7 @@ public class Structure {
 		return structuresMap;
 	}
 	
-	// Structures Library that can and should be enlarged
+	// vvvv If you add new structure make sure you added new position to the list in StructuresDialog vvv
 	static private Map<String, Structure> structuresMap;
 	static {
 		structuresMap = new HashMap<>();
