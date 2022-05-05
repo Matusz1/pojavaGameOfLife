@@ -29,7 +29,7 @@ public class StructuresDialog extends JDialog {
 	private static String value = "";
 	private static boolean selectionStatus = false;
 	private JList<String> list;
-	private DefaultListModel<String> listModel;
+	private static DefaultListModel<String> listModel;
 	
 	private static int types = 4;
 	private static int maxMembers = 20;
@@ -57,12 +57,37 @@ public class StructuresDialog extends JDialog {
 		JPanel titlesPanel = new JPanel();
 		this.add(bottomPanel, BorderLayout.SOUTH);
 		
+		// Adding list on the left
+				listModel = new DefaultListModel<String>();
+
+				//Oscillators - type 0
+				addStructure (0, "Pond");
+				addStructure (0, "Pulsar");
+				addStructure (0, "I-Column");
+				addStructure (0, "Gabriel's p138");
+				//Long living - type 1
+				addStructure (1, "The R-pentomino");
+				addStructure (1, "Diehard");
+				addStructure (1, "Acorn");
+				//Spaceships - type 2
+				addStructure (2, "Glider");
+				addStructure (2, "Light-weight spaceship");
+				addStructure (2, "Middle-weight spaceship");
+				addStructure (2, "Heavy-weight spaceship");
+				//Guns - type 3
+				addStructure (3, "Simkin glider gun");
+				addStructure (3, "Gosper glider gun");		
+		
+		/* ^^^ If you add something here, remember to go to Structure Class ^^^^^^^^^
+		 *		and create a structure with its vectors 						 	*/
+				
+				
 		//Adding upper panel with checkboxes
 		this.add(titlesPanel, BorderLayout.NORTH);
-		boxes = new JCheckBox[5];
+		boxes = new JCheckBox[types + 1];
 		ButtonGroup checkBoxGroup = new ButtonGroup();
 		
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < types + 1; i++) {
 			boxes[i] = new JCheckBox("", true);
 			checkBoxGroup.add(boxes[i]);
 			titlesPanel.add(boxes[i]);
@@ -135,36 +160,6 @@ public class StructuresDialog extends JDialog {
 						break;
 			}
 		});
-		
-		
-		// Adding list on the left
-		listModel = new DefaultListModel<String>();
-
-		//Oscillators - type 0
-		addStructure (0, "Pond");
-		addStructure (0, "Pulsar");
-		addStructure (0, "I-Column");
-		addStructure (0, "Gabriel's p138");
-		//Long living - type 1
-		addStructure (1, "The R-pentomino");
-		addStructure (1, "Diehard");
-		addStructure (1, "Acorn");
-		//Spaceships - type 2
-		addStructure (2, "Glider");
-		addStructure (2, "Light-weight spaceship");
-		addStructure (2, "Middle-weight spaceship");
-		addStructure (2, "Heavy-weight spaceship");
-		//Guns - type 3
-		addStructure (3, "Simkin glider gun");
-		addStructure (3, "Gosper glider gun");
-		
-		listModel.removeAllElements();
-		for (int i = 0; i < types; i++) 
-			for (int j = 0; j < maxMembers; j++)
-				if (structuresLib[i][j] != null)
-					listModel.addElement(structuresLib[i][j]);
-				else
-					break;
 		
 		list = new JList<String>(listModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -246,6 +241,7 @@ public class StructuresDialog extends JDialog {
 			for (int j = 0; j != maxMembers; ++j) 
 				if (structuresLib[type][j] == null) {
 					structuresLib[type][j] = new String (name);
+					listModel.addElement(structuresLib[type][j]);
 					break;
 				}
 	}
