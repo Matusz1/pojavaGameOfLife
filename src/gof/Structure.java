@@ -13,6 +13,7 @@ public class Structure {
 	private int VectorX[];
 	
 	// For rotation purposes
+	// Zero is in some way north direction and the directions go clockwise. But see: getRotationCoordinate
 	private static int direction = 0;
 	private static boolean reverse = false;
 	
@@ -46,6 +47,60 @@ public class Structure {
 		return VectorY;
 	}
 	
+	/* After making separate switches for X and Y coordinate 
+	 * one realizes that both X and Y coordinates of the drawing vector are found in here. 
+	 * Y coordinates are trailing by 1 the X coordinates 
+	 * See: highlight and drawStructure at GamePanel Class*/ 
+	public static int getRotationCoordinate(int dir, int i) {
+		switch ((4+dir)%4) // In java % operator returns negative numbers
+		{
+		case 0:
+			if (!reverse)
+				return +structuresMap.get(StructuresDialog.getValue()).getVX()[i];
+			else
+				return -structuresMap.get(StructuresDialog.getValue()).getVX()[i];
+		case 1:
+				return -structuresMap.get(StructuresDialog.getValue()).getVY()[i];
+		case 2:
+			if (!reverse)
+				return -structuresMap.get(StructuresDialog.getValue()).getVX()[i];
+			else
+				return +structuresMap.get(StructuresDialog.getValue()).getVX()[i];
+		case 3:
+				return +structuresMap.get(StructuresDialog.getValue()).getVY()[i];
+		default: 
+				return 0;
+		}
+	}
+	
+	public static int getDirection() {
+		return direction;
+	}
+
+	public static void resetDirection() {
+		direction = 0;
+	}
+
+	public static void nextDirection () {
+		direction++;
+		direction %= 4;
+	}
+
+	public static void reverseStructure() {
+		reverse = !reverse;
+	}
+	
+	
+	
+	
+	/*********************************************************
+	 *					STRUCTURES LIBRARY                   *
+	 *********************************************************/
+	
+	
+	public static Map<String, Structure> getStructuresMap () {
+		return structuresMap;
+	}
 	
 	// Structures Library that can and should be enlarged
 	static private Map<String, Structure> structuresMap;
@@ -99,70 +154,5 @@ public class Structure {
 				new int[] {-2,-1,-1,0,0,0,0,0,0,1,1,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,3,3,3,4,4,4,5,5,6,6}, 
 				new int[] {10,8,10,-2,-1,6,7,20,21,-3,1,6,7,20,21,-14,-13,-4,2,6,7,-14,-13,-4,0,2,3,8,10,-4,2,10,-3,1,-2,-1}));
 	}
-	
-	
-	public static Map<String, Structure> getStructuresMap () {
-		return structuresMap;
-	}
-	
-	public static int getXRotation(int i) {
-		switch (direction) {
-		case 0:
-			if (!reverse)
-				return +structuresMap.get(StructuresDialog.getValue()).getVX()[i];
-			else
-				return -structuresMap.get(StructuresDialog.getValue()).getVX()[i];
-		case 1:
-				return -structuresMap.get(StructuresDialog.getValue()).getVY()[i];
-		case 2:
-			if (!reverse)
-				return -structuresMap.get(StructuresDialog.getValue()).getVX()[i];
-			else
-				return +structuresMap.get(StructuresDialog.getValue()).getVX()[i];
-		case 3:
-				return +structuresMap.get(StructuresDialog.getValue()).getVY()[i];
-		default: 
-				return 0;
-		}
-	}
-	
-	public static int getYRotation(int i) {
-		switch (direction) {
-		case 0:
-			return +structuresMap.get(StructuresDialog.getValue()).getVY()[i];
-		case 1:
-			if (!reverse)
-				return +structuresMap.get(StructuresDialog.getValue()).getVX()[i];
-			else
-				return -structuresMap.get(StructuresDialog.getValue()).getVX()[i];
-		case 2:
-				return -structuresMap.get(StructuresDialog.getValue()).getVY()[i];
-		case 3:
-			if (!reverse)
-				return -structuresMap.get(StructuresDialog.getValue()).getVX()[i];
-			else
-				return +structuresMap.get(StructuresDialog.getValue()).getVX()[i];
-		default:
-				return 0;
-		}
-	}
-
-	public static int getDirection() {
-		return direction;
-	}
-
-	public static void resetDirection() {
-		direction = 0;
-	}
-
-	public static void nextDirection () {
-		direction++;
-		direction %= 4;
-	}
-
-	public static void reverseStructure() {
-		reverse = !reverse;
-	}
-	
 	
 }

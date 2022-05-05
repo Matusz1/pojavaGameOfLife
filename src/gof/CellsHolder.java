@@ -2,8 +2,8 @@ package gof_zooming;
 
 public class CellsHolder {
 	
-	static final int WIDTH = 512;
-	static final int HEIGHT = 512;
+	static final int WIDTH = 64;
+	static final int HEIGHT = 64;
 	
 	private static Cell[][] cells;
 	private static Cell[][] quickBackup;

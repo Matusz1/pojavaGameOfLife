@@ -268,7 +268,8 @@ public class GamePanel extends JPanel {
 		final int xRect = (int)Math.floor((xMousePos - boxSize + minorX)/boxSize)*boxSize + boxSize - minorX;
 		final int yRect = (int)Math.floor((yMousePos - boxSize + minorY)/boxSize)*boxSize + boxSize - minorY;
 		for (int i = 0; i < Structure.getStructuresMap().get(StructuresDialog.getValue()).getVX().length; i++)
-			drawCell (xRect + (Structure.getXRotation(i))*boxSize, yRect + (Structure.getYRotation(i))*boxSize, g);
+			drawCell (xRect + (Structure.getRotationCoordinate(Structure.getDirection(), i))*boxSize, 
+						yRect + (Structure.getRotationCoordinate(Structure.getDirection() - 1, i))*boxSize, g);
 	}
 	
 	
@@ -277,12 +278,12 @@ public class GamePanel extends JPanel {
 	// For making the highlighted cells alive 
 	public void drawStructure (String value) {
 		for (int i = 0; i < Structure.getStructuresMap().get(StructuresDialog.getValue()).getVY().length; i++)
-			CellsHolder.getCell(getCellAtMousePosition().getX() + Structure.getXRotation(i), getCellAtMousePosition().getY() + Structure.getYRotation(i)).revive();
+			CellsHolder.getCell(getCellAtMousePosition().getX() + Structure.getRotationCoordinate(Structure.getDirection(), i), 
+								getCellAtMousePosition().getY() + Structure.getRotationCoordinate(Structure.getDirection() - 1, i)).revive();
 		
 		Structure.resetDirection();
 		StructuresDialog.setSelectionStatus(false);
 	}
-	
 	
 	
 	@Override
