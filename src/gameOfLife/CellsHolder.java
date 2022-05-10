@@ -1,4 +1,4 @@
-package gof_zooming;
+package gameOfLife;
 
 public class CellsHolder {
 	

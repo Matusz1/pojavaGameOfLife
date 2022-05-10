@@ -1,4 +1,4 @@
-package gof_zooming;
+package gameOfLife;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

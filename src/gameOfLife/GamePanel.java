@@ -1,4 +1,4 @@
-package gof_zooming;
+package gameOfLife;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -70,7 +70,7 @@ public class GamePanel extends JPanel {
 				if (boxSize > 45) newBoxSize -= notches*5;
 				if (boxSize > 75) newBoxSize -= notches*5;
 				boxSize = newBoxSize;
-				if (boxSize < 1) boxSize = 1;
+				if (boxSize < 3) boxSize = 3;
 				if (boxSize > 100) boxSize = 100;
 				
 				
@@ -81,7 +81,6 @@ public class GamePanel extends JPanel {
 				fixOffsets();
 				
 				GamePanel.this.repaint();
-
 			}
 		});
 		
@@ -240,41 +239,6 @@ public class GamePanel extends JPanel {
 	}
 	
 	
-	public void drawMinorGrid(Graphics g) {
-		final int width = this.getWidth();
-		final int height = this.getHeight();
-		
-		// Drawing Horizontal lines
-		for (int i = (boxSize - minorY); i < height; i += boxSize) {
-			g.drawLine(0, i+1, width, i+1);
-		}
-		
-		// Drawing Vertical lines
-		for (int i = (boxSize - minorX); i < width; i += boxSize) {
-			g.drawLine(i+1, 0, i+1, height);
-		}
-	}
-	
-	
-	
-	public void drawMajorGrid(Graphics g) {
-		final int width = this.getWidth();
-		final int height = this.getHeight();
-		
-		// Drawing Horizontal lines
-		for (int i = (boxSize - minorY) - (majorY % 10)*boxSize; i < height; i += 10*boxSize) {
-			g.drawLine(0, i+1, width, i+1);
-		}
-		
-		// Drawing Vertical lines
-		for (int i = (boxSize - minorX) - (majorX % 10)*boxSize; i < width; i += 10*boxSize) {
-			g.drawLine(i+1, 0, i+1, height);
-		}
-	}
-	
-	
-	
-	
 	// For highlighting the structure to be placed
 	public void highlightStructure(Graphics g) {
 		g.setColor(Color.gray);
@@ -306,8 +270,7 @@ public class GamePanel extends JPanel {
 	 */
 	private void drawCell(int x, int y, Graphics g) {
 		//TODO - maybe would look nicer if space changed based on zoom
-		int space = 3; 
-		g.fillRect(x + space, y + space , boxSize - 2*space, boxSize - 2*space);
+		g.fillRect(x + 1, y + 1, boxSize - 1, boxSize - 1);
 	}
 		
 	@Override
