@@ -80,7 +80,7 @@ public class GamePanel extends JPanel {
 				minorY -= yMousePos;
 				fixOffsets();
 				
-				GamePanel.this.repaint();
+				//GamePanel.this.repaint();
 			}
 		});
 		
@@ -121,7 +121,7 @@ public class GamePanel extends JPanel {
 						cell.revive();
 				}
 				
-				repaint();
+				//repaint();
 			}
 		});
 		
@@ -131,7 +131,7 @@ public class GamePanel extends JPanel {
 			public void mouseMoved(MouseEvent e) {
 				xMousePos = e.getX();
 				yMousePos = e.getY();
-				repaint();
+				//repaint();
 			}
 			
 			/* TODO - an idea: to draw new cells 
@@ -159,7 +159,7 @@ public class GamePanel extends JPanel {
 				Structure.nextDirection();
 			else if (e.getKeyCode() == KeyEvent.VK_T)
 				Structure.reverseStructure();
-				repaint();
+				//repaint();
 		}
 
 		@Override

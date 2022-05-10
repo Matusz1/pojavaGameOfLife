@@ -12,21 +12,8 @@ public class GameManager {
 	
 	private GameOfLife game;
 	
-	private boolean running;
-	private int gameSpeed;
-	
 	GameManager(GameOfLife g) {
 		game = g;
-		running = false;
-		gameSpeed = 2;
-	}
-	
-	void setRunning(boolean b) {
-		running = b;
-	}
-	
-	void setGameSpeed(int speed) {
-		gameSpeed = speed;
 	}
 	
 	public void saveToFile(File file) {

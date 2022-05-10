@@ -2,8 +2,8 @@ package gameOfLife;
 
 public class CellsHolder {
 	
-	static final int WIDTH = 64;
-	static final int HEIGHT = 64;
+	static final int WIDTH = 128;
+	static final int HEIGHT = 128;
 	
 	private static Cell[][] cells;
 	private static Cell[][] quickBackup;

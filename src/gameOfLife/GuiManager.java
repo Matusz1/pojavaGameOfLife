@@ -6,6 +6,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -34,11 +36,18 @@ public class GuiManager extends JFrame {
 	private JButton blackCellsButton;
 	private JButton colorCellsButton;
 	private JButton structuresButton;
+	private JButton stepButton;
+	private JButton clearAllButton;
 	
 	private JMenuBar menuBar;
 	private JMenu fileMenu;
 	private JMenuItem[] fileMenuItems;
-	private JSlider gameSpeedSlider;	
+	private JSlider gameSpeedSlider;
+	
+	Timer timer = new Timer(true); // <-- Super important true
+	private boolean running = false;
+	private int gameSpeed = 2;
+	static private int[] gameSpeedIntervals = {50, 20, 10, 5};
 	
 	// === Main Constructor === //
 	
@@ -60,6 +69,22 @@ public class GuiManager extends JFrame {
 		
 		this.add(optionsPanel, BorderLayout.EAST);
 		this.add(gamePanel, BorderLayout.CENTER);
+		
+		timer.scheduleAtFixedRate(new TimerTask() {
+			int lastRun = 0;
+			@Override
+			public void run() {
+				if (running) {
+					++lastRun;
+					if (lastRun > gameSpeedIntervals[gameSpeed-1]) {
+						lastRun = 0;
+						CellsHolder.updateNeigboursCount();
+						CellsHolder.updateAliveStatus();
+					}
+				}
+				gamePanel.repaint();
+			}
+		}, 1000, 25);
 		
 		initOptionsPanel();
 		initMenuBar();
@@ -176,7 +201,7 @@ public class GuiManager extends JFrame {
 		gameSpeedSlider.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				game.getGameMgr().setGameSpeed(gameSpeedSlider.getValue());
+				gameSpeed = gameSpeedSlider.getValue();
 			}
 		});
 		
@@ -186,28 +211,53 @@ public class GuiManager extends JFrame {
 		blackCellsButton = new JButton("Black");
 		colorCellsButton = new JButton("Color");
 		structuresButton = new JButton("Structures");
+		stepButton = new JButton("Next step");
+		clearAllButton = new JButton("Clear all");
+		
+		clearAllButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				CellsHolder.clearAll();
+			}
+		});
+		
+		stepButton.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				CellsHolder.updateNeigboursCount();
+				CellsHolder.updateAliveStatus();
+				gamePanel.repaint();
+			}
+		});
 		
 		startButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				running = true;
+				// This is tragedy - temporary solution that we will never remove
+				timer = new Timer(true);
+				
+				clearAllButton.setEnabled(false);
 				structuresButton.setEnabled(false);
-				gameSpeedSlider.setEnabled(false);
+				stepButton.setEnabled(false);
 				fileMenu.setEnabled(false);
 				stopButton.setEnabled(true);
 				startButton.setEnabled(false);
-				game.getGameMgr().setRunning(true);
 			}
 		});
 		
 		stopButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gameSpeedSlider.setEnabled(true);
+				clearAllButton.setEnabled(true);
+				stepButton.setEnabled(true);
 				structuresButton.setEnabled(true);
 				fileMenu.setEnabled(true);
 				startButton.setEnabled(true);
 				stopButton.setEnabled(false);
-				game.getGameMgr().setRunning(false);
+				running = false;
 			}
 		});
 		stopButton.setEnabled(false);
@@ -266,19 +316,9 @@ public class GuiManager extends JFrame {
 		optionsPanel.add(new JLabel("Choose color of cells"));
 		optionsPanel.add(p2);
 		optionsPanel.add(structuresButton);
+		optionsPanel.add(stepButton);
+		optionsPanel.add(clearAllButton);
 		
-		// TEMPORARY
-		JButton tmpButton = new JButton("Next step");
-		tmpButton.addActionListener(new ActionListener() {	
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				CellsHolder.updateNeigboursCount();
-				CellsHolder.updateAliveStatus();
-				gamePanel.repaint();
-			}
-		});
-		
-		optionsPanel.add(tmpButton);
 		optionsPanel.add(manual);
 		optionsPanel.add(manual1);
 		optionsPanel.add(manual2);
