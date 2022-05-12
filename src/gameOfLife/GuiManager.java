@@ -47,7 +47,7 @@ public class GuiManager extends JFrame {
 	Timer timer = new Timer(true); // <-- Super important true
 	private boolean running = false;
 	private int gameSpeed = 2;
-	static private int[] gameSpeedIntervals = {50, 20, 10, 5};
+	static private int[] gameSpeedIntervals = {30, 10, 3, 1};
 	
 	// === Main Constructor === //
 	
