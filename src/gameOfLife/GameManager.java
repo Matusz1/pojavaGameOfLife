@@ -3,10 +3,12 @@ package gameOfLife;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class GameManager {
 	
@@ -18,15 +20,12 @@ public class GameManager {
 	
 	public void saveToFile(File file) {
 		System.out.println("Saving to file: " + file.getName());
-		
-		Charset charset = Charset.forName("US-ASCII");
-		Path myPath = file.toPath();
-		try (BufferedWriter writer = Files.newBufferedWriter(myPath, charset)) {
-		    int byteWrite = 0; 	//meaningless number
+
+		try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
 		    for (int y = 0; y < CellsHolder.HEIGHT; y++)
 		    	for (int x = 0; x < CellsHolder.WIDTH; x++) {
-		    		byteWrite = CellsHolder.getCells()[x][y].getLifetime();
-		    		writer.write(byteWrite + 48);
+		    		writer.write(Integer.toString(CellsHolder.getCells()[x][y].getLifetime()));
+		    		writer.newLine();
 		    	}
 		} catch (IOException x) {
 		    System.err.format("IOException: %s%n", x);
@@ -35,21 +34,17 @@ public class GameManager {
 	
 	public void loadFromFile(File file) {
 		System.out.println("Loading from file: " + file.getName());
-		
-		Charset charset = Charset.forName("US-ASCII");
-		Path myPath = file.toPath();
-		try (BufferedReader reader = Files.newBufferedReader(myPath, charset)) {
-		    int byteRead=0; 	//meaningless number
+
+		try (BufferedReader reader = Files.newBufferedReader(file.toPath(), Charset.forName("UTF-8"))) {
 		    CellsHolder.clearAll();
-		    
+		    String lineRead = reader.readLine();
 		    for (int y = 0; y < CellsHolder.HEIGHT; y++)
-		    	for (int x = 0; x < CellsHolder.WIDTH; x++) {
-		    		if (byteRead != -1) 
-		    			CellsHolder.getCells()[x][y].setLifetime(reader.read() - 48);  
-		    		else
-		    			break;
-		    		} 		    
-		   game.getGuiMgr().getGamePanel().repaint();
+		    	for (int x = 0; x < CellsHolder.WIDTH; x++) 	
+		    		if (lineRead != null) {
+		    			CellsHolder.getCells()[x][y].setLifetime(Integer.parseInt(lineRead)); 
+		    			lineRead = reader.readLine();
+		    	}
+		   game.getGuiMgr().getGamePanel().repaint();   
 		} catch (IOException x) {
 		    System.err.format("IOException: %s%n", x);
 		}
