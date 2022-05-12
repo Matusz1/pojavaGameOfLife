@@ -74,6 +74,7 @@ public class StructuresDialog extends JDialog {
 				addStructure (2, "Light-weight spaceship");
 				addStructure (2, "Middle-weight spaceship");
 				addStructure (2, "Heavy-weight spaceship");
+				addStructure (2, "Glider synthesis");
 				//Guns - type 3
 				addStructure (3, "Simkin glider gun");
 				addStructure (3, "Gosper glider gun");		
